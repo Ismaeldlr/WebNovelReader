@@ -1,0 +1,121 @@
+.card {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  box-shadow: var(--shadow-card);
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+}
+
+.cover {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover-a { background: linear-gradient(160deg, #1c1917 0%, #292524 100%); }
+.cover-b { background: linear-gradient(160deg, #0c1a2e 0%, #1e3a5f 100%); }
+.cover-c { background: linear-gradient(160deg, #1a0a00 0%, #3d1a00 100%); }
+.cover-d { background: linear-gradient(160deg, #0a1a0a 0%, #1a3a1a 100%); }
+
+.coverTitle {
+  font-family: var(--font-display);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+  padding: 8px;
+  line-height: 1.4;
+}
+
+.newBadge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--badge-new-bg);
+  color: var(--badge-new-text);
+  font-size: 9.5px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 20px;
+}
+
+.favBadge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  color: #f59e0b;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.body {
+  padding: 9px 10px;
+}
+
+.cardTitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardAuthor {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progressBar {
+  height: 2px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.statusPill {
+  font-size: 9.5px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+
+.sReading   { background: var(--status-reading-bg);   color: var(--status-reading);   }
+.sFollowing { background: var(--status-following-bg); color: var(--status-following); }
+.sHold      { background: var(--status-hold-bg);      color: var(--status-hold);      }
+.sCompleted { background: var(--status-completed-bg); color: var(--status-completed); }
+.sDropped   { background: var(--status-dropped-bg);   color: var(--status-dropped);   }
+
+.progressText {
+  font-size: 9.5px;
+  color: var(--text-muted);
+}

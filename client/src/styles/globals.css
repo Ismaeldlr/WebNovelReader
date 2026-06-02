@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css');
+
+:root {
+  --bg-base: #F7F4EF;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #F0EDE7;
+  --bg-sidebar: #1C1917;
+  --sidebar-text: #A8A29E;
+  --sidebar-text-active: #FAFAF9;
+  --sidebar-hover: rgba(255, 255, 255, 0.06);
+  --sidebar-active: rgba(255, 255, 255, 0.10);
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+  --text-primary: #1C1917;
+  --text-secondary: #78716C;
+  --text-muted: #A8A29E;
+  --border: rgba(28, 25, 23, 0.10);
+  --border-strong: rgba(28, 25, 23, 0.18);
+  --accent: #C2410C;
+  --accent-light: #FFF7ED;
+  --accent-text: #9A3412;
+  --badge-new-bg: #F0FDF4;
+  --badge-new-text: #166534;
+  --status-reading: #2563EB;
+  --status-reading-bg: #EFF6FF;
+  --status-following: #7C3AED;
+  --status-following-bg: #F5F3FF;
+  --status-hold: #D97706;
+  --status-hold-bg: #FFFBEB;
+  --status-dropped: #DC2626;
+  --status-dropped-bg: #FEF2F2;
+  --status-completed: #059669;
+  --status-completed-bg: #ECFDF5;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --font-display: 'Lora', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --sidebar-w: 220px;
+  --topbar-h: 56px;
+}
+
+[data-theme='dark'] {
+  --bg-base: #0C0A09;
+  --bg-surface: #1C1917;
+  --bg-elevated: #292524;
+  --bg-sidebar: #111110;
+  --sidebar-text: #78716C;
+  --sidebar-text-active: #FAFAF9;
+  --sidebar-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-active: rgba(255, 255, 255, 0.09);
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --text-primary: #FAFAF9;
+  --text-secondary: #A8A29E;
+  --text-muted: #57534E;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent: #F97316;
+  --accent-light: #1C1108;
+  --accent-text: #FB923C;
+  --badge-new-bg: #052E16;
+  --badge-new-text: #4ADE80;
+  --status-reading-bg: #0F172A;
+  --status-following-bg: #1E1B4B;
+  --status-hold-bg: #1C1007;
+  --status-dropped-bg: #1F0A0A;
+  --status-completed-bg: #042F1E;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  transition: background 0.2s, color 0.2s;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
