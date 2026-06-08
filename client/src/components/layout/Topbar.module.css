@@ -69,6 +69,32 @@
   font-size: 16px;
 }
 
+.account {
+  max-width: 160px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+.account i {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.account span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .notifDot {
   position: absolute;
   top: 5px;

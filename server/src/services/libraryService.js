@@ -43,9 +43,11 @@ class LibraryService {
       if (search) {
         conditions.push(`(n.title ILIKE $${paramIndex} OR n.author ILIKE $${paramIndex})`);
         params.push(`%${search}%`);
+        paramIndex++;
       }
 
       const whereClause = conditions.join(' AND ');
+      const filterParams = [...params];
 
       // Sorting mapping
       let orderByClause;
@@ -105,8 +107,7 @@ class LibraryService {
         JOIN novels n ON n.id = le.novel_id
         WHERE ${whereClause}
       `;
-      const countParams = params.slice(0, paramIndex - 2); // remove limit/offset
-      const { rows: countRows } = await client.query(countQuery, countParams);
+      const { rows: countRows } = await client.query(countQuery, filterParams);
       const total = parseInt(countRows[0].total, 10);
 
       return { novels, total };
