@@ -1,100 +1,125 @@
+import { useState, useEffect } from 'react';
 import NovelCard from '../components/library/NovelCard';
 import FilterBar from '../components/library/FilterBar';
+import { useLibrary, useLibraryStats, useNewChaptersCount } from '../hooks/useLibrary';
 import styles from './LibraryPage.module.css';
 
-const MOCK_NOVELS = [
-  {
-    id: 1,
-    title: 'The Legendary Mechanic',
-    author: 'Chocolion',
-    status: 'Reading' as const,
-    currentChapter: 748,
-    totalChapters: 1463,
-    newChapters: 6,
-    isFavorite: true,
-    coverVariant: 'a' as const,
-  },
-  {
-    id: 2,
-    title: "Omniscient Reader's Viewpoint",
-    author: 'singNsong',
-    status: 'Reading' as const,
-    currentChapter: 524,
-    totalChapters: 551,
-    newChapters: 2,
-    isFavorite: false,
-    coverVariant: 'b' as const,
-  },
-  {
-    id: 3,
-    title: 'Lord of the Mysteries',
-    author: 'Cuttlefish That Loves Diving',
-    status: 'Completed' as const,
-    currentChapter: 1432,
-    totalChapters: 1432,
-    newChapters: 0,
-    isFavorite: false,
-    coverVariant: 'c' as const,
-  },
-  {
-    id: 4,
-    title: 'The Beginning After The End',
-    author: 'TurtleMe',
-    status: 'Following' as const,
-    currentChapter: 143,
-    totalChapters: 289,
-    newChapters: 1,
-    isFavorite: true,
-    coverVariant: 'd' as const,
-  },
-];
-
-const STATS = [
-  { label: 'Total novels',     value: '24',    sub: 'across 3 sources' },
-  { label: 'Reading',          value: '8',     sub: 'active series',   accent: true },
-  { label: 'Chapters cached',  value: '1,204', sub: 'offline ready' },
-  { label: 'Last updated',     value: '2h ago',sub: 'all sources checked' },
-];
-
 export default function LibraryPage() {
+  const { novels, total, loading, error, filters, setFilters, refetch } = useLibrary({
+    status: 'all',
+    sourceSite: 'all',
+    onlyFavorites: false,
+    onlyUnread: false,
+    search: '',
+    sortBy: 'lastReadAt',
+    order: 'DESC',
+    limit: 24,
+    offset: 0,
+  });
+
+  const { stats, loading: statsLoading } = useLibraryStats();
+  const { count: newChaptersCount, loading: newCountLoading } = useNewChaptersCount();
+
+  const [recentNovels, setRecentNovels] = useState(novels.slice(0, 4));
+
+  useEffect(() => {
+    // Show first 4 novels as "Recently read" (sorted by last_read_at already)
+    setRecentNovels(novels.slice(0, 4));
+  }, [novels]);
+
+  const handleFilterChange = (key: keyof typeof filters, value: any) => {
+    setFilters(prev => ({ ...prev, [key]: value, offset: 0 }));
+  };
+
+  const handleLoadMore = () => {
+    setFilters(prev => ({ ...prev, offset: (prev.offset || 0) + (prev.limit || 24) }));
+  };
+
+  if (error) {
+    return <div className={styles.error}>Error: {error}</div>;
+  }
+
   return (
     <>
-      <div className={styles.updateStrip}>
-        <i className="ti ti-sparkles" aria-hidden="true" />
-        <span>
-          <strong>3 new chapters</strong> available across your library since your last visit.
-        </span>
-        <div className={styles.stripRight}>
-          View all <i className="ti ti-arrow-right" aria-hidden="true" />
-        </div>
-      </div>
-
-      <div className={styles.statsRow}>
-        {STATS.map(s => (
-          <div key={s.label} className={styles.statCard}>
-            <div className={styles.statLabel}>{s.label}</div>
-            <div className={`${styles.statValue} ${s.accent ? styles.statAccent : ''}`}>
-              {s.value}
-            </div>
-            <div className={styles.statSub}>{s.sub}</div>
+      {/* Update strip */}
+      {!newCountLoading && newChaptersCount > 0 && (
+        <div className={styles.updateStrip}>
+          <i className="ti ti-sparkles" aria-hidden="true" />
+          <span>
+            <strong>{newChaptersCount} new chapter{newChaptersCount !== 1 ? 's' : ''}</strong> available across your library since your last visit.
+          </span>
+          <div className={styles.stripRight}>
+            View all <i className="ti ti-arrow-right" aria-hidden="true" />
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
-      <FilterBar />
-
-      <div>
-        <div className={styles.sectionHeader}>
-          <span className={styles.sectionTitle}>Recently read</span>
-          <a className={styles.seeAll}>See all 24</a>
+      {/* Stats row */}
+      <div className={styles.statsRow}>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Total novels</div>
+          <div className={styles.statValue}>{statsLoading ? '...' : stats?.totalNovels}</div>
+          <div className={styles.statSub}>across 3 sources</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Reading</div>
+          <div className={`${styles.statValue} ${styles.statAccent}`}>
+            {statsLoading ? '...' : stats?.readingCount}
+          </div>
+          <div className={styles.statSub}>active series</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Chapters cached</div>
+          <div className={styles.statValue}>{statsLoading ? '...' : stats?.chaptersCached}</div>
+          <div className={styles.statSub}>offline ready</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Last updated</div>
+          <div className={styles.statValue}>{statsLoading ? '...' : stats?.lastUpdated}</div>
+          <div className={styles.statSub}>all sources checked</div>
         </div>
       </div>
 
-      <div className={styles.grid}>
-        {MOCK_NOVELS.map(novel => (
-          <NovelCard key={novel.id} {...novel} />
-        ))}
+      <FilterBar
+        statusFilter={filters.status || 'all'}
+        sourceFilter={filters.sourceSite || 'all'}
+        sortBy={filters.sortBy || 'lastReadAt'}
+        onlyFavorites={filters.onlyFavorites || false}
+        onlyUnread={filters.onlyUnread || false}
+        onStatusChange={(val) => handleFilterChange('status', val === 'all' ? null : val)}
+        onSourceChange={(val) => handleFilterChange('sourceSite', val === 'all' ? null : val)}
+        onSortChange={(val) => handleFilterChange('sortBy', val)}
+        onFavoritesChange={(val) => handleFilterChange('onlyFavorites', val)}
+        onUnreadChange={(val) => handleFilterChange('onlyUnread', val)}
+        onSearch={(query) => handleFilterChange('search', query)}
+      />
+
+      <div className={styles.sectionHeader}>
+        <span className={styles.sectionTitle}>Recently read</span>
+        <a className={styles.seeAll} onClick={() => handleFilterChange('sortBy', 'lastReadAt')}>
+          See all {total}
+        </a>
       </div>
+
+      {loading && novels.length === 0 ? (
+        <div className={styles.loading}>Loading library...</div>
+      ) : (
+        <>
+          <div className={styles.grid}>
+            {recentNovels.map(novel => (
+              <NovelCard key={novel.id} novel={novel} onUpdate={refetch} />
+            ))}
+          </div>
+
+          {novels.length > recentNovels.length && (
+            <div className={styles.loadMore}>
+              <button onClick={handleLoadMore} disabled={loading}>
+                Load more ({novels.length - recentNovels.length} remaining)
+              </button>
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 }

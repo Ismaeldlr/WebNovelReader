@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const libraryRoutes = require('./routes/library');
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/health', require('./routes/health'));
+app.use('/api/library', libraryRoutes);
 
 // 404 handler
 app.use((req, res) => {

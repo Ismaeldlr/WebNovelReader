@@ -1,52 +1,87 @@
 import { useState } from 'react';
 import styles from './FilterBar.module.css';
 
-const statusFilters = [
-  { label: 'All',          icon: 'ti-layout-grid' },
-  { label: 'Reading',      icon: 'ti-eye' },
-  { label: 'Following',    icon: 'ti-rss' },
-  { label: 'On Hold',      icon: 'ti-clock-pause' },
-  { label: 'Completed',    icon: 'ti-check' },
-  { label: 'Dropped',      icon: 'ti-x' },
-  { label: 'Favorites',    icon: 'ti-heart' },
-  { label: 'New chapters', icon: 'ti-bell-ringing' },
-];
+interface FilterBarProps {
+  statusFilter: string;
+  sourceFilter: string;
+  sortBy: string;
+  onlyFavorites: boolean;
+  onlyUnread: boolean;
+  onStatusChange: (status: string) => void;
+  onSourceChange: (source: string) => void;
+  onSortChange: (sort: string) => void;
+  onFavoritesChange: (value: boolean) => void;
+  onUnreadChange: (value: boolean) => void;
+  onSearch: (query: string) => void;
+}
 
-const sortOptions = [
-  'Last read',
-  'Last updated',
-  'Title A–Z',
-  'Date added',
-  'Progress %',
-];
+export default function FilterBar({
+  statusFilter,
+  sourceFilter,
+  sortBy,
+  onlyFavorites,
+  onlyUnread,
+  onStatusChange,
+  onSourceChange,
+  onSortChange,
+  onFavoritesChange,
+  onUnreadChange,
+  onSearch,
+}: FilterBarProps) {
+  const [searchInput, setSearchInput] = useState('');
 
-export default function FilterBar() {
-  const [active, setActive] = useState('All');
-  const [sort, setSort] = useState('Last read');
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSearch(searchInput);
+  };
 
   return (
-    <div className={styles.bar}>
-      {statusFilters.map(f => (
-        <button
-          key={f.label}
-          className={`${styles.chip} ${active === f.label ? styles.active : ''}`}
-          onClick={() => setActive(f.label)}
-        >
-          <i className={`ti ${f.icon}`} aria-hidden="true" />
-          {f.label}
-        </button>
-      ))}
+    <div className={styles.filterBar}>
+      <div className={styles.filters}>
+        <select value={statusFilter} onChange={(e) => onStatusChange(e.target.value)}>
+          <option value="all">All statuses</option>
+          <option value="reading">Reading</option>
+          <option value="following">Following</option>
+          <option value="on_hold">On Hold</option>
+          <option value="dropped">Dropped</option>
+          <option value="completed">Completed</option>
+        </select>
 
-      <select
-        className={styles.sortSelect}
-        value={sort}
-        onChange={e => setSort(e.target.value)}
-        aria-label="Sort by"
-      >
-        {sortOptions.map(o => (
-          <option key={o} value={o}>Sort: {o}</option>
-        ))}
-      </select>
+        <select value={sourceFilter} onChange={(e) => onSourceChange(e.target.value)}>
+          <option value="all">All sources</option>
+          <option value="ranobes">Ranobes</option>
+          <option value="wtr_lab">WTR Lab</option>
+          <option value="royal_road">Royal Road</option>
+        </select>
+
+        <select value={sortBy} onChange={(e) => onSortChange(e.target.value)}>
+          <option value="lastReadAt">Last read</option>
+          <option value="lastUpdated">Last updated</option>
+          <option value="title">Title A-Z</option>
+          <option value="addedAt">Date added</option>
+          <option value="progress">Progress %</option>
+        </select>
+
+        <label className={styles.checkbox}>
+          <input type="checkbox" checked={onlyFavorites} onChange={(e) => onFavoritesChange(e.target.checked)} />
+          <span>Favorites only</span>
+        </label>
+
+        <label className={styles.checkbox}>
+          <input type="checkbox" checked={onlyUnread} onChange={(e) => onUnreadChange(e.target.checked)} />
+          <span>Unread chapters</span>
+        </label>
+      </div>
+
+      <form onSubmit={handleSearchSubmit} className={styles.search}>
+        <i className="ti ti-search" />
+        <input
+          type="text"
+          placeholder="Search title or author..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+      </form>
     </div>
   );
 }
