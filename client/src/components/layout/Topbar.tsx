@@ -1,16 +1,37 @@
+import ThemePicker from '../ThemePicker';
+import type { ThemeId } from '../../hooks/useTheme';
 import styles from './Topbar.module.css';
 
 interface TopbarProps {
   title: string;
-  theme: 'light' | 'dark';
+  currentTheme: ThemeId;
   username: string;
   onLogout: () => void;
-  onToggleTheme: () => void;
+  onThemeChange: (themeId: ThemeId) => void;
+  onToggleSidebar: () => void;
+  isSidebarOpen: boolean;
 }
 
-export default function Topbar({ title, theme, username, onLogout, onToggleTheme }: TopbarProps) {
+export default function Topbar({
+  title,
+  currentTheme,
+  username,
+  onLogout,
+  onThemeChange,
+  onToggleSidebar,
+  isSidebarOpen,
+}: TopbarProps) {
   return (
     <header className={styles.topbar}>
+      <button
+        className={styles.menuButton}
+        onClick={onToggleSidebar}
+        aria-label="Open navigation"
+        aria-expanded={isSidebarOpen}
+        type="button"
+      >
+        <i className="ti ti-menu-2" aria-hidden="true" />
+      </button>
       <div className={styles.title}>{title}</div>
 
       <div className={styles.right}>
@@ -24,13 +45,7 @@ export default function Topbar({ title, theme, username, onLogout, onToggleTheme
           <div className={styles.notifDot} />
         </button>
 
-        <button
-          className={styles.iconBtn}
-          onClick={onToggleTheme}
-          aria-label="Toggle theme"
-        >
-          <i className={`ti ${theme === 'dark' ? 'ti-sun' : 'ti-moon'}`} aria-hidden="true" />
-        </button>
+        <ThemePicker currentTheme={currentTheme} onThemeChange={onThemeChange} />
 
         <div className={styles.account} title={username}>
           <i className="ti ti-user-circle" aria-hidden="true" />

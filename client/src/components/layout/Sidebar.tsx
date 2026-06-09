@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom';
+import { useEffect } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
 const navSections = [
@@ -27,9 +28,20 @@ const navSections = [
   },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const location = useLocation();
+
+  useEffect(() => {
+    onClose();
+  }, [location.pathname, onClose]);
+
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
       <div className={styles.logo}>
         <div className={styles.logoIcon}>
           <i className="ti ti-book-2" aria-hidden="true" />
@@ -38,6 +50,14 @@ export default function Sidebar() {
           <div className={styles.logoName}>Webnovel Hub</div>
           <div className={styles.logoSub}>Your reading space</div>
         </div>
+        <button
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label="Close navigation"
+          type="button"
+        >
+          <i className="ti ti-x" aria-hidden="true" />
+        </button>
       </div>
 
       <nav className={styles.nav}>

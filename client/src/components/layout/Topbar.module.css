@@ -20,6 +20,27 @@
   letter-spacing: -0.3px;
 }
 
+.menuButton {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.menuButton:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.menuButton i {
+  font-size: 20px;
+}
+
 .right {
   margin-left: auto;
   display: flex;
@@ -104,4 +125,30 @@
   background: var(--accent);
   border-radius: 50%;
   border: 1.5px solid var(--bg-surface);
+}
+
+@media (max-width: 767px) {
+  .topbar {
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .menuButton {
+    display: flex;
+  }
+
+  .title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .searchBox {
+    display: none;
+  }
+
+  .account {
+    max-width: 112px;
+  }
 }

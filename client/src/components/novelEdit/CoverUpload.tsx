@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { updateNovelCover } from '../../api/novels';
+import { toApiAssetUrl } from '../../utils/assets';
 import styles from './CoverUpload.module.css';
 
 interface CoverUploadProps {
@@ -11,7 +12,9 @@ interface CoverUploadProps {
 
 function withCacheToken(url: string | null, token: number): string | null {
   if (!url) return null;
-  return `${url}${url.includes('?') ? '&' : '?'}v=${token}`;
+  const resolvedUrl = toApiAssetUrl(url);
+  if (!resolvedUrl) return null;
+  return `${resolvedUrl}${resolvedUrl.includes('?') ? '&' : '?'}v=${token}`;
 }
 
 export default function CoverUpload({ novelId, title, coverUrl }: CoverUploadProps) {

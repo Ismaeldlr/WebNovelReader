@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const path = require('path');
 const libraryRoutes = require('./routes/library');
 const authRoutes = require('./routes/auth');
 const exploreRoutes = require('./routes/explore');
@@ -12,14 +13,16 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true,
 }));
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Routes
 app.use('/api/health', require('./routes/health'));

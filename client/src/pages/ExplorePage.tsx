@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { fetchExploreNovels } from '../api/explore';
 import type { ExploreNovel } from '../api/explore';
 import { addNovelToLibrary, deleteNovel } from '../api/library';
+import { toApiAssetUrl } from '../utils/assets';
 import styles from './ExplorePage.module.css';
 
 const sourceLabels: Record<string, string> = {
   ranobes: 'Ranobes',
   wtr_lab: 'WTR Lab',
   royal_road: 'Royal Road',
+  epub: 'EPUB',
 };
 
 export default function ExplorePage() {
@@ -124,39 +126,47 @@ export default function ExplorePage() {
         <div className={styles.empty}>No novels found.</div>
       ) : (
         <div className={styles.grid}>
-          {novels.map((novel) => (
-            <article className={styles.card} key={novel.id}>
-              <button
-                className={`${styles.libraryButton} ${novel.in_library ? styles.added : ''}`}
-                type="button"
-                onClick={() => handleLibraryToggle(novel)}
-                disabled={updatingNovelId === novel.id}
-                aria-label={novel.in_library ? `Remove ${novel.title} from library` : `Add ${novel.title} to library`}
-                title={novel.in_library ? 'In library' : 'Add to library'}
-              >
-                <i className={`ti ${novel.in_library ? 'ti-check' : 'ti-plus'}`} aria-hidden="true" />
-              </button>
-              <Link className={styles.cover} to={`/novels/${novel.id}`}>
-                <i className="ti ti-book-2" aria-hidden="true" />
-              </Link>
-              <div className={styles.cardBody}>
-                <div className={styles.meta}>
-                  <span>{sourceLabels[novel.source_site] || novel.source_site}</span>
-                  <span>{novel.total_chapters} chapters</span>
-                </div>
-                <Link className={styles.titleLink} to={`/novels/${novel.id}`}>
-                  <h2>{novel.title}</h2>
+          {novels.map((novel) => {
+            const coverSrc = toApiAssetUrl(novel.cover_url) || novel.cover_url_orig;
+
+            return (
+              <article className={styles.card} key={novel.id}>
+                <button
+                  className={`${styles.libraryButton} ${novel.in_library ? styles.added : ''}`}
+                  type="button"
+                  onClick={() => handleLibraryToggle(novel)}
+                  disabled={updatingNovelId === novel.id}
+                  aria-label={novel.in_library ? `Remove ${novel.title} from library` : `Add ${novel.title} to library`}
+                  title={novel.in_library ? 'In library' : 'Add to library'}
+                >
+                  <i className={`ti ${novel.in_library ? 'ti-check' : 'ti-plus'}`} aria-hidden="true" />
+                </button>
+                <Link className={styles.cover} to={`/novels/${novel.id}`}>
+                  {coverSrc ? (
+                    <img src={coverSrc} alt={novel.title} />
+                  ) : (
+                    <i className="ti ti-book-2" aria-hidden="true" />
+                  )}
                 </Link>
-                <div className={styles.author}>{novel.author || 'Unknown author'}</div>
-                <p>{novel.description || 'No description yet.'}</p>
-                <div className={styles.tags}>
-                  {novel.tags.slice(0, 3).map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
+                <div className={styles.cardBody}>
+                  <div className={styles.meta}>
+                    <span>{sourceLabels[novel.source_site] || novel.source_site}</span>
+                    <span>{novel.total_chapters} chapters</span>
+                  </div>
+                  <Link className={styles.titleLink} to={`/novels/${novel.id}`}>
+                    <h2>{novel.title}</h2>
+                  </Link>
+                  <div className={styles.author}>{novel.author || 'Unknown author'}</div>
+                  <p>{novel.description || 'No description yet.'}</p>
+                  <div className={styles.tags}>
+                    {novel.tags.slice(0, 1).map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       )}
 

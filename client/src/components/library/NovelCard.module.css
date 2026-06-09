@@ -6,7 +6,7 @@
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-card);
   display: grid;
-  grid-template-columns: 116px minmax(0, 1fr);
+  grid-template-columns: 146px minmax(0, 1fr);
   overflow: visible;
   transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
 }

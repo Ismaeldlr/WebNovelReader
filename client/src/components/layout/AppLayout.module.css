@@ -3,6 +3,10 @@
   min-height: 100vh;
 }
 
+.backdrop {
+  display: none;
+}
+
 .main {
   flex: 1;
   margin-left: var(--sidebar-w);
@@ -19,4 +23,31 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: block;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .backdropOpen {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

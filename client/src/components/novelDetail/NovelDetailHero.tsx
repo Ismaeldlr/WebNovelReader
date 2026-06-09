@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import SourceBadge from '../common/SourceBadge';
 import { formatRelativeDate } from '../../utils/date';
+import { toApiAssetUrl } from '../../utils/assets';
 import type { LibraryStatus, NovelDetail } from '../../types/novel';
 import styles from './NovelDetailHero.module.css';
 
@@ -34,19 +35,20 @@ export default function NovelDetailHero({
   const readLabel = libraryEntry && libraryEntry.current_chapter_number > 0
     ? `Continue - Ch. ${nextChapter}`
     : 'Start Reading';
-  const heroStyle = novel.cover_url
-    ? ({ '--cover-url': `url("${novel.cover_url}")` } as CSSProperties & Record<string, string>)
+  const coverSrc = toApiAssetUrl(novel.cover_url);
+  const heroStyle = coverSrc
+    ? ({ '--cover-url': `url("${coverSrc}")` } as CSSProperties & Record<string, string>)
     : undefined;
 
   return (
     <section className={styles.hero} style={heroStyle}>
-      {novel.cover_url && <div className={styles.heroBg} />}
+      {coverSrc && <div className={styles.heroBg} />}
       <div className={styles.overlay} />
 
       <div className={styles.inner}>
         <div className={styles.coverCard}>
-          {novel.cover_url ? (
-            <img src={novel.cover_url} alt={novel.title} />
+          {coverSrc ? (
+            <img src={coverSrc} alt={novel.title} />
           ) : (
             <div className={styles.placeholderCover}>{novel.title.charAt(0)}</div>
           )}

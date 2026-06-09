@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getNovelChapters } from '../../api/novels';
 import type { ChapterItem } from '../../types/novel';
 import ChapterListItem from './ChapterListItem';
@@ -23,8 +23,6 @@ export default function ChapterList({
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const currentRowRef = useRef<HTMLDivElement | null>(null);
-  const hasScrolledRef = useRef(false);
 
   const loadPage = useCallback(async (targetPage: number, replace = false) => {
     if (replace) {
@@ -48,16 +46,8 @@ export default function ChapterList({
   }, [novelId]);
 
   useEffect(() => {
-    hasScrolledRef.current = false;
     loadPage(1, true);
   }, [loadPage]);
-
-  useEffect(() => {
-    if (!hasScrolledRef.current && currentRowRef.current && totalChapters > 100) {
-      currentRowRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      hasScrolledRef.current = true;
-    }
-  }, [chapters, totalChapters]);
 
   const visibleChapters = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -119,22 +109,14 @@ export default function ChapterList({
             </div>
           ) : (
             <div className={styles.list}>
-              {visibleChapters.map((chapter) => {
-                const item = (
-                  <ChapterListItem
-                    key={chapter.id}
-                    chapter={chapter}
-                    isRead={!chapter.is_user_new && chapter.chapter_number <= currentChapterNumber}
-                    novelId={novelId}
-                  />
-                );
-
-                if (chapter.chapter_number === currentChapterNumber) {
-                  return <div ref={currentRowRef} key={chapter.id}>{item}</div>;
-                }
-
-                return item;
-              })}
+              {visibleChapters.map((chapter) => (
+                <ChapterListItem
+                  key={chapter.id}
+                  chapter={chapter}
+                  isRead={!chapter.is_user_new && chapter.chapter_number <= currentChapterNumber}
+                  novelId={novelId}
+                />
+              ))}
             </div>
           )}
 

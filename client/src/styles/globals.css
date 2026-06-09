@@ -2,6 +2,54 @@
 @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css');
 
 :root {
+  --bg-base: #0E0F14;
+  --bg-surface: #1C1917;
+  --bg-elevated: #292524;
+  --bg-sidebar: #111110;
+  --sidebar-text: #78716C;
+  --sidebar-text-active: #FAFAF9;
+  --sidebar-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-active: rgba(255, 255, 255, 0.09);
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --text-primary: #FAFAF9;
+  --text-secondary: #A8A29E;
+  --text-muted: #57534E;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent: #C9A84C;
+  --accent-light: rgba(201, 168, 76, 0.10);
+  --accent-text: #E5C96F;
+  --badge-new-bg: #052E16;
+  --badge-new-text: #4ADE80;
+  --status-reading: #2563EB;
+  --status-reading-bg: #0F172A;
+  --status-following: #7C3AED;
+  --status-following-bg: #1E1B4B;
+  --status-hold: #D97706;
+  --status-hold-bg: #1C1007;
+  --status-dropped: #DC2626;
+  --status-dropped-bg: #1F0A0A;
+  --status-completed: #059669;
+  --status-completed-bg: #042F1E;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --font-display: 'Lora', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --sidebar-w: 220px;
+  --topbar-h: 56px;
+  --breakpoint-mobile: 768px;
+}
+
+[data-theme='obsidian'] {
+  --bg-base: #0E0F14;
+  --accent: #C9A84C;
+  --accent-light: rgba(201, 168, 76, 0.10);
+  --accent-text: #E5C96F;
+}
+
+[data-theme='light'] {
   --bg-base: #F7F4EF;
   --bg-surface: #FFFFFF;
   --bg-elevated: #F0EDE7;
@@ -21,52 +69,40 @@
   --accent-text: #9A3412;
   --badge-new-bg: #F0FDF4;
   --badge-new-text: #166534;
-  --status-reading: #2563EB;
   --status-reading-bg: #EFF6FF;
-  --status-following: #7C3AED;
   --status-following-bg: #F5F3FF;
-  --status-hold: #D97706;
   --status-hold-bg: #FFFBEB;
-  --status-dropped: #DC2626;
   --status-dropped-bg: #FEF2F2;
-  --status-completed: #059669;
   --status-completed-bg: #ECFDF5;
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --font-display: 'Lora', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --sidebar-w: 220px;
-  --topbar-h: 56px;
 }
 
-[data-theme='dark'] {
-  --bg-base: #0C0A09;
-  --bg-surface: #1C1917;
-  --bg-elevated: #292524;
-  --bg-sidebar: #111110;
-  --sidebar-text: #78716C;
-  --sidebar-text-active: #FAFAF9;
-  --sidebar-hover: rgba(255, 255, 255, 0.05);
-  --sidebar-active: rgba(255, 255, 255, 0.09);
-  --sidebar-border: rgba(255, 255, 255, 0.06);
-  --text-primary: #FAFAF9;
-  --text-secondary: #A8A29E;
-  --text-muted: #57534E;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --accent: #F97316;
-  --accent-light: #1C1108;
-  --accent-text: #FB923C;
-  --badge-new-bg: #052E16;
-  --badge-new-text: #4ADE80;
-  --status-reading-bg: #0F172A;
-  --status-following-bg: #1E1B4B;
-  --status-hold-bg: #1C1007;
-  --status-dropped-bg: #1F0A0A;
-  --status-completed-bg: #042F1E;
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+[data-theme='forest'] {
+  --bg-base: #0E1410;
+  --accent: #4D9E75;
+  --accent-light: rgba(77, 158, 117, 0.10);
+  --accent-text: #79C59D;
+}
+
+[data-theme='crimson'] {
+  --bg-base: #140E0E;
+  --accent: #B85450;
+  --accent-light: rgba(184, 84, 80, 0.10);
+  --accent-text: #D9827E;
+}
+
+[data-theme='ocean'] {
+  --bg-base: #0E1018;
+  --accent: #4A80B5;
+  --accent-light: rgba(74, 128, 181, 0.10);
+  --accent-text: #77A6D3;
+}
+
+[data-theme='amethyst'] {
+  --bg-base: #100E14;
+  --accent: #8B5FBF;
+  --accent-light: rgba(139, 95, 191, 0.10);
+  --accent-text: #B08AD8;
 }
 
 *, *::before, *::after {

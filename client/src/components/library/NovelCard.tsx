@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NovelCard.module.css';
 import { toggleFavorite, updateStatus, deleteNovel } from '../../api/library';
+import { toApiAssetUrl } from '../../utils/assets';
 
 interface NovelCardProps {
   novel: {
@@ -47,6 +48,7 @@ export default function NovelCard({ novel, onUpdate }: NovelCardProps) {
     : `${novel.current_chapter_number} read`;
 
   const readAction = novel.current_chapter_number > 0 ? 'Continue' : 'Start';
+  const coverSrc = toApiAssetUrl(novel.cover_url);
   const currentChapter = novel.current_chapter_number;
 
   const handleFavorite = async () => {
@@ -91,8 +93,8 @@ export default function NovelCard({ novel, onUpdate }: NovelCardProps) {
   return (
     <article className={`${styles.card} ${isUpdating ? styles.updating : ''}`}>
       <Link className={styles.cover} to={`/novels/${novel.id}`}>
-        {novel.cover_url ? (
-          <img src={novel.cover_url} alt={novel.title} />
+        {coverSrc ? (
+          <img src={coverSrc} alt={novel.title} />
         ) : (
           <div className={styles.placeholderCover}>
             <i className="ti ti-book-2" aria-hidden="true" />

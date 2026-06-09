@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
@@ -17,21 +18,35 @@ const pageTitles: Record<string, string> = {
 };
 
 export default function AppLayout() {
-  const { theme, toggle } = useTheme();
+  const { currentTheme, setTheme } = useTheme();
   const { user, logout } = useAuth();
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const title = pageTitles[location.pathname] ?? 'Webnovel Hub';
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarOpen(isOpen => !isOpen);
+  }, []);
+  const closeSidebar = useCallback(() => {
+    setIsSidebarOpen(false);
+  }, []);
 
   return (
     <div className={styles.layout}>
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
+      <div
+        className={`${styles.backdrop} ${isSidebarOpen ? styles.backdropOpen : ''}`}
+        onClick={closeSidebar}
+        aria-hidden="true"
+      />
       <div className={styles.main}>
         <Topbar
           title={title}
-          theme={theme}
+          currentTheme={currentTheme}
           username={user?.username || ''}
           onLogout={logout}
-          onToggleTheme={toggle}
+          onThemeChange={setTheme}
+          onToggleSidebar={toggleSidebar}
+          isSidebarOpen={isSidebarOpen}
         />
         <main className={styles.content}>
           <Outlet />
