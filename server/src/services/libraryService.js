@@ -256,15 +256,29 @@ class LibraryService {
     try {
       await client.query('BEGIN');
       const res = await client.query(
-        `UPDATE library_entries
-         SET status = $1, updated_at = NOW()
-         WHERE user_id = $2 AND novel_id = $3
-         RETURNING status`,
-        [newStatus, userId, novelId]
+        `INSERT INTO library_entries (user_id, novel_id, status)
+         SELECT $1, n.id, $2::library_status
+         FROM novels n
+         WHERE n.id = $3
+         ON CONFLICT (user_id, novel_id) DO UPDATE
+         SET status = EXCLUDED.status, updated_at = NOW()
+         RETURNING id, status, is_favorite, current_chapter_number, added_at, last_read_at`,
+        [userId, newStatus, novelId]
       );
-      if (res.rowCount === 0) throw new Error('Library entry not found');
+      if (res.rowCount === 0) {
+        const error = new Error('Novel not found');
+        error.status = 404;
+        throw error;
+      }
       await client.query('COMMIT');
-      return { status: res.rows[0].status };
+      return {
+        id: res.rows[0].id,
+        status: res.rows[0].status,
+        is_favorite: res.rows[0].is_favorite,
+        current_chapter_number: res.rows[0].current_chapter_number,
+        added_at: res.rows[0].added_at,
+        last_read_at: res.rows[0].last_read_at,
+      };
     } catch (err) {
       await client.query('ROLLBACK');
       throw err;

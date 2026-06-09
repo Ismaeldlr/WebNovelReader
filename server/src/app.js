@@ -7,6 +7,8 @@ const authRoutes = require('./routes/auth');
 const exploreRoutes = require('./routes/explore');
 const novelRoutes = require('./routes/novels');
 const importRoutes = require('./routes/import');
+const readerRoutes = require('./routes/reader');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.use('/api/explore', exploreRoutes);
 app.use('/api/library', libraryRoutes);
 app.use('/api/novels', novelRoutes);
 app.use('/api/import', importRoutes);
+app.use('/api/reader', readerRoutes);
+app.use('/api/user', userRoutes);
 
 // 404 handler
 app.use((req, res) => {

@@ -1,0 +1,13 @@
+.content {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+}
+
+.content p {
+  margin: 0 0 1.45em;
+  white-space: pre-wrap;
+}
+
+.content p:last-child {
+  margin-bottom: 0;
+}

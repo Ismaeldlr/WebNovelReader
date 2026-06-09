@@ -1,0 +1,98 @@
+.panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 20;
+  width: min(300px, calc(100vw - 32px));
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+  padding: 14px;
+}
+
+.stepperRow,
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 10px 0;
+}
+
+.stepperRow:first-child {
+  padding-top: 0;
+}
+
+.optionGroup:last-child {
+  padding-bottom: 0;
+}
+
+.stepperRow + .stepperRow,
+.optionGroup {
+  border-top: 0.5px solid var(--border);
+}
+
+.stepperRow > span,
+.optionGroup > span {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.stepper {
+  height: 36px;
+  display: grid;
+  grid-template-columns: 38px 1fr 38px;
+  align-items: center;
+  border: 0.5px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.stepper button {
+  height: 100%;
+  color: var(--text-secondary);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.stepper button:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface);
+}
+
+.stepper strong {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.segmented {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  padding: 4px;
+}
+
+.segmented button {
+  min-height: 32px;
+  border-radius: 5px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.segmented button:hover {
+  color: var(--text-primary);
+}
+
+.segmented .active {
+  background: var(--accent-light);
+  color: var(--accent);
+}

@@ -18,8 +18,7 @@ export default function NovelProgress({
   const percent = totalChapters > 0
     ? Math.min(100, Math.round((currentChapter / totalChapters) * 100))
     : 0;
-  const nextChapter = currentChapter + 1;
-  const label = currentChapter > 0 ? `Continue - Ch. ${nextChapter}` : 'Start Reading';
+  const label = currentChapter > 0 ? `Continue - Ch. ${currentChapter}` : 'Start Reading';
 
   return (
     <section className={styles.section}>
@@ -28,7 +27,7 @@ export default function NovelProgress({
           <h2>Progress</h2>
           <p>{lastReadAt ? `Last read ${formatRelativeDate(lastReadAt)}` : 'Not started yet.'}</p>
         </div>
-        <Link className={styles.cta} to={`/reader/${novelId}/${nextChapter}`}>
+        <Link className={styles.cta} to={`/reader/${novelId}/${currentChapter}`}>
           <i className="ti ti-player-play-filled" aria-hidden="true" />
           {label}
         </Link>

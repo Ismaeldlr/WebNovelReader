@@ -47,6 +47,7 @@ export default function NovelCard({ novel, onUpdate }: NovelCardProps) {
     : `${novel.current_chapter_number} read`;
 
   const readAction = novel.current_chapter_number > 0 ? 'Continue' : 'Start';
+  const currentChapter = novel.current_chapter_number;
 
   const handleFavorite = async () => {
     setIsUpdating(true);
@@ -161,10 +162,10 @@ export default function NovelCard({ novel, onUpdate }: NovelCardProps) {
             )}
           </div>
 
-          <button className={styles.readButton} type="button">
+          <Link className={styles.readButton} to={`/reader/${novel.id}/${currentChapter}`}>
             <i className="ti ti-player-play-filled" aria-hidden="true" />
             {readAction}
-          </button>
+          </Link>
         </div>
       </div>
     </article>

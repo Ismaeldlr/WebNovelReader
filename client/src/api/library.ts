@@ -77,9 +77,9 @@ export async function addNovelToLibrary(novelId: string): Promise<LibraryEntry> 
   return res.data;
 }
 
-export async function updateStatus(novelId: string, status: string): Promise<string> {
-  const res = await apiClient.patch<unknown, ApiEnvelope<{ status: string }>>(`/library/${novelId}/status`, { status });
-  return res.data.status;
+export async function updateStatus(novelId: string, status: string): Promise<LibraryEntry> {
+  const res = await apiClient.patch<unknown, ApiEnvelope<LibraryEntry>>(`/library/${novelId}/status`, { status });
+  return res.data;
 }
 
 export async function deleteNovel(novelId: string): Promise<void> {

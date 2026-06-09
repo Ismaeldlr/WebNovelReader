@@ -8,6 +8,7 @@ import LibraryPage from './pages/LibraryPage';
 import NovelEditPage from './pages/NovelEditPage';
 import NovelDetailPage from './pages/NovelDetailPage';
 import PlaceholderPage from './pages/PlaceholderPage';
+import ReaderPage from './pages/ReaderPage';
 
 export default function App() {
   return (
@@ -32,6 +33,10 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route
+        path="/reader/:novelId/:chapterNumber"
+        element={<ReaderPage />}
+      />
       <Route element={<AppLayout />}>
         <Route index element={<LibraryPage />} />
         <Route path="/add" element={<AddNovelsPage />} />
