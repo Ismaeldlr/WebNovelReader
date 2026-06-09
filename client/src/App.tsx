@@ -1,8 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import AddNovelsPage from './pages/AddNovelsPage';
 import AuthPage from './pages/AuthPage';
+import ExplorePage from './pages/ExplorePage';
 import LibraryPage from './pages/LibraryPage';
+import NovelEditPage from './pages/NovelEditPage';
+import NovelDetailPage from './pages/NovelDetailPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 
 export default function App() {
@@ -30,15 +34,18 @@ function AppRoutes() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<LibraryPage />} />
+        <Route path="/add" element={<AddNovelsPage />} />
         <Route
-          path="/add"
-          element={
-            <PlaceholderPage
-              icon="ti-plus"
-              title="Add Novel"
-              description="Paste a novel URL from Ranobes, WTR Lab, or Royal Road to scrape and add it to your library."
-            />
-          }
+          path="/explore"
+          element={<ExplorePage />}
+        />
+        <Route
+          path="/novels/:id"
+          element={<NovelDetailPage />}
+        />
+        <Route
+          path="/novels/:id/edit"
+          element={<NovelEditPage />}
         />
         <Route
           path="/reader"

@@ -46,6 +46,17 @@ exports.getNewChaptersCount = async (req, res, next) => {
   }
 };
 
+exports.addNovel = async (req, res, next) => {
+  try {
+    const { id: userId } = req.user;
+    const { novelId } = req.params;
+    const result = await LibraryService.addNovel(userId, novelId);
+    res.status(201).json({ success: true, data: result, error: null });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.toggleFavorite = async (req, res, next) => {
   try {
     const { id: userId } = req.user;

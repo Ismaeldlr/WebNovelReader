@@ -1,0 +1,75 @@
+.section {
+  width: min(100%, 1100px);
+  margin: 0 auto;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  padding: 16px 18px;
+}
+
+.header,
+.progressMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.header h2 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.header p,
+.progressMeta {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.cta {
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 13px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.progressMeta {
+  margin-top: 16px;
+  margin-bottom: 7px;
+}
+
+.progressMeta strong {
+  color: var(--text-primary);
+}
+
+.progressBar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  min-width: 4px;
+  background: var(--accent);
+  border-radius: inherit;
+  transition: width 0.4s ease;
+}
+
+@media (max-width: 640px) {
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

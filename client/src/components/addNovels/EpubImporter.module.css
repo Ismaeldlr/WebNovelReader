@@ -1,0 +1,241 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fileInput {
+  display: none;
+}
+
+.dropZone {
+  min-height: 238px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  padding: 34px;
+  border-radius: var(--radius-sm);
+  border: 1.5px dashed var(--border-strong);
+  background: var(--bg-surface);
+  text-align: center;
+  color: var(--text-primary);
+  transition: border-color 0.15s, background 0.15s;
+  outline: none;
+}
+
+.dropZone:focus-visible {
+  border-color: var(--accent);
+}
+
+.dragActive {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.dropIcon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--accent-light);
+  color: var(--accent-text);
+  font-size: 29px;
+}
+
+.dropZone h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-bottom: 7px;
+}
+
+.dropZone p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 360px;
+}
+
+.previewRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.fileMeta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fileMeta i {
+  color: var(--accent-text);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.fileMeta div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fileMeta strong {
+  color: var(--text-primary);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileMeta span {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.previewRow button,
+.secondaryButton {
+  color: var(--accent-text);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.error {
+  border-radius: var(--radius-sm);
+  background: var(--status-dropped-bg);
+  color: var(--status-dropped);
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.submitRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.importButton,
+.primaryLink {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.importButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.importButton i {
+  font-size: 16px;
+}
+
+.importButton:disabled i {
+  animation: spin 0.9s linear infinite;
+}
+
+.success {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.successIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--badge-new-bg);
+  color: var(--badge-new-text);
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.successBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kicker {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.success h2 {
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 560px) {
+  .dropZone {
+    min-height: 210px;
+    padding: 24px 16px;
+  }
+
+  .previewRow,
+  .success {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .submitRow {
+    justify-content: stretch;
+  }
+
+  .importButton {
+    width: 100%;
+  }
+}

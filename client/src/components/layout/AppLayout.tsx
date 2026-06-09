@@ -7,7 +7,8 @@ import styles from './AppLayout.module.css';
 
 const pageTitles: Record<string, string> = {
   '/':        'My Library',
-  '/add':     'Add Novel',
+  '/add':     'Add Novels',
+  '/explore': 'Explore',
   '/reader':  'Reader',
   '/log':     'Reading Log',
   '/updates': 'Update Jobs',

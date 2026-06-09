@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import NovelCard from '../components/library/NovelCard';
 import FilterBar from '../components/library/FilterBar';
 import { useLibrary, useLibraryStats, useNewChaptersCount } from '../hooks/useLibrary';
@@ -20,13 +19,6 @@ export default function LibraryPage() {
   const { stats, loading: statsLoading } = useLibraryStats();
   const { count: newChaptersCount, loading: newCountLoading } = useNewChaptersCount();
 
-  const [recentNovels, setRecentNovels] = useState(novels.slice(0, 4));
-
-  useEffect(() => {
-    // Show first 4 novels as "Recently read" (sorted by last_read_at already)
-    setRecentNovels(novels.slice(0, 4));
-  }, [novels]);
-
   const handleFilterChange = (key: keyof typeof filters, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value, offset: 0 }));
   };
@@ -40,8 +32,7 @@ export default function LibraryPage() {
   }
 
   return (
-    <>
-      {/* Update strip */}
+    <div className={styles.page}>
       {!newCountLoading && newChaptersCount > 0 && (
         <div className={styles.updateStrip}>
           <i className="ti ti-sparkles" aria-hidden="true" />
@@ -54,31 +45,32 @@ export default function LibraryPage() {
         </div>
       )}
 
-      {/* Stats row */}
-      <div className={styles.statsRow}>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Total novels</div>
-          <div className={styles.statValue}>{statsLoading ? '...' : stats?.totalNovels}</div>
-          <div className={styles.statSub}>across 3 sources</div>
+      <section className={styles.summary}>
+        <div>
+          <div className={styles.eyebrow}>Library</div>
+          <h1>Your reading shelf</h1>
+          <p>{total} novel{total === 1 ? '' : 's'} matched by the current view.</p>
         </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Reading</div>
-          <div className={`${styles.statValue} ${styles.statAccent}`}>
-            {statsLoading ? '...' : stats?.readingCount}
+
+        <div className={styles.summaryStats}>
+          <div>
+            <span>Total</span>
+            <strong>{statsLoading ? '...' : stats?.totalNovels ?? 0}</strong>
           </div>
-          <div className={styles.statSub}>active series</div>
+          <div>
+            <span>Reading</span>
+            <strong>{statsLoading ? '...' : stats?.readingCount ?? 0}</strong>
+          </div>
+          <div>
+            <span>Cached</span>
+            <strong>{statsLoading ? '...' : stats?.chaptersCached ?? 0}</strong>
+          </div>
+          <div>
+            <span>Updated</span>
+            <strong>{statsLoading ? '...' : stats?.lastUpdated ?? 'Never'}</strong>
+          </div>
         </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Chapters cached</div>
-          <div className={styles.statValue}>{statsLoading ? '...' : stats?.chaptersCached}</div>
-          <div className={styles.statSub}>offline ready</div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Last updated</div>
-          <div className={styles.statValue}>{statsLoading ? '...' : stats?.lastUpdated}</div>
-          <div className={styles.statSub}>all sources checked</div>
-        </div>
-      </div>
+      </section>
 
       <FilterBar
         statusFilter={filters.status || 'all'}
@@ -95,31 +87,31 @@ export default function LibraryPage() {
       />
 
       <div className={styles.sectionHeader}>
-        <span className={styles.sectionTitle}>Recently read</span>
-        <a className={styles.seeAll} onClick={() => handleFilterChange('sortBy', 'lastReadAt')}>
-          See all {total}
-        </a>
+        <span className={styles.sectionTitle}>Novels</span>
+        <span className={styles.resultCount}>{novels.length} shown</span>
       </div>
 
       {loading && novels.length === 0 ? (
         <div className={styles.loading}>Loading library...</div>
+      ) : novels.length === 0 ? (
+        <div className={styles.empty}>Your library is empty.</div>
       ) : (
         <>
           <div className={styles.grid}>
-            {recentNovels.map(novel => (
+            {novels.map(novel => (
               <NovelCard key={novel.id} novel={novel} onUpdate={refetch} />
             ))}
           </div>
 
-          {novels.length > recentNovels.length && (
+          {novels.length < total && (
             <div className={styles.loadMore}>
               <button onClick={handleLoadMore} disabled={loading}>
-                Load more ({novels.length - recentNovels.length} remaining)
+                {loading ? 'Loading...' : `Load more (${total - novels.length} remaining)`}
               </button>
             </div>
           )}
         </>
       )}
-    </>
+    </div>
   );
 }

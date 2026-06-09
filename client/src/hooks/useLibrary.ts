@@ -14,7 +14,17 @@ export function useLibrary(initialFilters: LibraryFilters) {
     setError(null);
     try {
       const data = await fetchLibrary(filters);
-      setNovels(data.novels);
+      setNovels((currentNovels) => {
+        if ((filters.offset || 0) === 0) {
+          return data.novels;
+        }
+
+        const existingIds = new Set(currentNovels.map((novel) => novel.id));
+        return [
+          ...currentNovels,
+          ...data.novels.filter((novel) => !existingIds.has(novel.id)),
+        ];
+      });
       setTotal(data.total);
     } catch (err: any) {
       setError(err.message || 'Failed to load library');

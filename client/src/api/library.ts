@@ -1,4 +1,5 @@
 import apiClient from './client';
+import type { LibraryEntry } from '../types/novel';
 
 interface ApiEnvelope<T> {
   success: boolean;
@@ -69,6 +70,11 @@ export async function fetchNewChaptersCount(): Promise<number> {
 export async function toggleFavorite(novelId: string): Promise<boolean> {
   const res = await apiClient.patch<unknown, ApiEnvelope<{ isFavorite: boolean }>>(`/library/${novelId}/favorite`);
   return res.data.isFavorite;
+}
+
+export async function addNovelToLibrary(novelId: string): Promise<LibraryEntry> {
+  const res = await apiClient.post<unknown, ApiEnvelope<LibraryEntry>>(`/library/${novelId}`);
+  return res.data;
 }
 
 export async function updateStatus(novelId: string, status: string): Promise<string> {

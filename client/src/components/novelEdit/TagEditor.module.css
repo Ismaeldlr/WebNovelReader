@@ -1,0 +1,55 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  padding: 4px 7px 4px 8px;
+  font-size: 12px;
+}
+
+.pill button {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--text-muted);
+}
+
+.pill button:hover {
+  background: var(--border);
+  color: var(--text-primary);
+}
+
+.editor input {
+  width: 100%;
+  min-height: 38px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  padding: 0 11px;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.editor input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}

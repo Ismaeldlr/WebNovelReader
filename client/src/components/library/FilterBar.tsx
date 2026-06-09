@@ -1,5 +1,11 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import styles from './FilterBar.module.css';
+
+type FilterOption = {
+  value: string;
+  label: string;
+};
 
 interface FilterBarProps {
   statusFilter: string;
@@ -15,6 +21,30 @@ interface FilterBarProps {
   onSearch: (query: string) => void;
 }
 
+const statusOptions: FilterOption[] = [
+  { value: 'all', label: 'All' },
+  { value: 'reading', label: 'Reading' },
+  { value: 'following', label: 'Following' },
+  { value: 'on_hold', label: 'On Hold' },
+  { value: 'dropped', label: 'Dropped' },
+  { value: 'completed', label: 'Completed' },
+];
+
+const sourceOptions: FilterOption[] = [
+  { value: 'all', label: 'All' },
+  { value: 'ranobes', label: 'Ranobes' },
+  { value: 'wtr_lab', label: 'WTR Lab' },
+  { value: 'royal_road', label: 'Royal Road' },
+];
+
+const sortOptions: FilterOption[] = [
+  { value: 'lastReadAt', label: 'Last read' },
+  { value: 'lastUpdated', label: 'Last updated' },
+  { value: 'title', label: 'Title A-Z' },
+  { value: 'addedAt', label: 'Date added' },
+  { value: 'progress', label: 'Progress %' },
+];
+
 export default function FilterBar({
   statusFilter,
   sourceFilter,
@@ -29,59 +59,124 @@ export default function FilterBar({
   onSearch,
 }: FilterBarProps) {
   const [searchInput, setSearchInput] = useState('');
+  const [openFilter, setOpenFilter] = useState<string | null>(null);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSearch(searchInput);
   };
 
   return (
     <div className={styles.filterBar}>
+      <form onSubmit={handleSearchSubmit} className={styles.search}>
+        <i className="ti ti-search" aria-hidden="true" />
+        <input
+          type="text"
+          placeholder="Search title or author"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <button type="submit" aria-label="Search">
+          <i className="ti ti-arrow-right" aria-hidden="true" />
+        </button>
+      </form>
+
       <div className={styles.filters}>
-        <select value={statusFilter} onChange={(e) => onStatusChange(e.target.value)}>
-          <option value="all">All statuses</option>
-          <option value="reading">Reading</option>
-          <option value="following">Following</option>
-          <option value="on_hold">On Hold</option>
-          <option value="dropped">Dropped</option>
-          <option value="completed">Completed</option>
-        </select>
+        <FilterDropdown
+          id="status"
+          label="Status"
+          value={statusFilter}
+          options={statusOptions}
+          openFilter={openFilter}
+          setOpenFilter={setOpenFilter}
+          onChange={onStatusChange}
+        />
 
-        <select value={sourceFilter} onChange={(e) => onSourceChange(e.target.value)}>
-          <option value="all">All sources</option>
-          <option value="ranobes">Ranobes</option>
-          <option value="wtr_lab">WTR Lab</option>
-          <option value="royal_road">Royal Road</option>
-        </select>
+        <FilterDropdown
+          id="source"
+          label="Source"
+          value={sourceFilter}
+          options={sourceOptions}
+          openFilter={openFilter}
+          setOpenFilter={setOpenFilter}
+          onChange={onSourceChange}
+        />
 
-        <select value={sortBy} onChange={(e) => onSortChange(e.target.value)}>
-          <option value="lastReadAt">Last read</option>
-          <option value="lastUpdated">Last updated</option>
-          <option value="title">Title A-Z</option>
-          <option value="addedAt">Date added</option>
-          <option value="progress">Progress %</option>
-        </select>
+        <FilterDropdown
+          id="sort"
+          label="Sort"
+          value={sortBy}
+          options={sortOptions}
+          openFilter={openFilter}
+          setOpenFilter={setOpenFilter}
+          onChange={onSortChange}
+        />
 
         <label className={styles.checkbox}>
           <input type="checkbox" checked={onlyFavorites} onChange={(e) => onFavoritesChange(e.target.checked)} />
-          <span>Favorites only</span>
+          <span><i className="ti ti-star" aria-hidden="true" />Favorites</span>
         </label>
 
         <label className={styles.checkbox}>
           <input type="checkbox" checked={onlyUnread} onChange={(e) => onUnreadChange(e.target.checked)} />
-          <span>Unread chapters</span>
+          <span><i className="ti ti-sparkles" aria-hidden="true" />Unread</span>
         </label>
       </div>
+    </div>
+  );
+}
 
-      <form onSubmit={handleSearchSubmit} className={styles.search}>
-        <i className="ti ti-search" />
-        <input
-          type="text"
-          placeholder="Search title or author..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-      </form>
+function FilterDropdown({
+  id,
+  label,
+  value,
+  options,
+  openFilter,
+  setOpenFilter,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  options: FilterOption[];
+  openFilter: string | null;
+  setOpenFilter: (value: string | null) => void;
+  onChange: (value: string) => void;
+}) {
+  const isOpen = openFilter === id;
+  const selected = options.find((option) => option.value === value) || options[0];
+
+  return (
+    <div className={styles.dropdown}>
+      <button
+        className={styles.dropdownButton}
+        type="button"
+        onClick={() => setOpenFilter(isOpen ? null : id)}
+        aria-expanded={isOpen}
+      >
+        <span>{label}</span>
+        <strong>{selected.label}</strong>
+        <i className="ti ti-chevron-down" aria-hidden="true" />
+      </button>
+
+      {isOpen && (
+        <div className={styles.dropdownMenu}>
+          {options.map((option) => (
+            <button
+              key={option.value}
+              className={option.value === value ? styles.selectedOption : ''}
+              type="button"
+              onClick={() => {
+                onChange(option.value);
+                setOpenFilter(null);
+              }}
+            >
+              <span>{option.label}</span>
+              {option.value === value && <i className="ti ti-check" aria-hidden="true" />}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

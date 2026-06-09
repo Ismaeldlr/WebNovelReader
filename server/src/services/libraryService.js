@@ -183,6 +183,49 @@ class LibraryService {
   }
 
   // Toggle favorite status
+  static async addNovel(userId, novelId) {
+    const client = await db.getClient();
+    try {
+      await client.query('BEGIN');
+
+      const novelRes = await client.query(
+        `SELECT id FROM novels WHERE id = $1`,
+        [novelId]
+      );
+
+      if (novelRes.rowCount === 0) {
+        const error = new Error('Novel not found');
+        error.status = 404;
+        throw error;
+      }
+
+      const res = await client.query(
+        `INSERT INTO library_entries (user_id, novel_id, status)
+         VALUES ($1, $2, 'following')
+         ON CONFLICT (user_id, novel_id) DO UPDATE
+         SET updated_at = NOW()
+         RETURNING id, status, is_favorite, current_chapter_number, added_at, last_read_at`,
+        [userId, novelId]
+      );
+
+      await client.query('COMMIT');
+      return {
+        id: res.rows[0].id,
+        status: res.rows[0].status,
+        is_favorite: res.rows[0].is_favorite,
+        current_chapter_number: res.rows[0].current_chapter_number,
+        added_at: res.rows[0].added_at,
+        last_read_at: res.rows[0].last_read_at,
+      };
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+  // Toggle favorite status
   static async toggleFavorite(userId, novelId) {
     const client = await db.getClient();
     try {

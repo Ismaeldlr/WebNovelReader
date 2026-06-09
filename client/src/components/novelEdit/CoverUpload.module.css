@@ -1,0 +1,93 @@
+.coverEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.previews {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.previewBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.previewBlock span {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.previewBlock img,
+.placeholder {
+  width: 140px;
+  height: 202px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-elevated);
+  object-fit: cover;
+  box-shadow: var(--shadow-card);
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 58px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fileButton,
+.uploadButton {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  padding: 0 13px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fileButton {
+  border: 0.5px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.fileButton input {
+  display: none;
+}
+
+.uploadButton {
+  background: var(--accent);
+  color: #fff;
+}
+
+.uploadButton:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.error {
+  border-radius: var(--radius-sm);
+  background: var(--status-dropped-bg);
+  color: var(--status-dropped);
+  padding: 10px 12px;
+  font-size: 13px;
+}

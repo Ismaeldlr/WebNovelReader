@@ -16,6 +16,7 @@ CREATE TYPE source_site AS ENUM (
   'ranobes',
   'wtr_lab',
   'royal_road'
+  'epub'
 );
 
 CREATE TYPE library_status AS ENUM (

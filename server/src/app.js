@@ -4,6 +4,9 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const libraryRoutes = require('./routes/library');
 const authRoutes = require('./routes/auth');
+const exploreRoutes = require('./routes/explore');
+const novelRoutes = require('./routes/novels');
+const importRoutes = require('./routes/import');
 
 const app = express();
 
@@ -14,11 +17,15 @@ app.use(cors({
 }));
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(express.static('public'));
 
 // Routes
 app.use('/api/health', require('./routes/health'));
 app.use('/api/auth', authRoutes);
+app.use('/api/explore', exploreRoutes);
 app.use('/api/library', libraryRoutes);
+app.use('/api/novels', novelRoutes);
+app.use('/api/import', importRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -28,10 +35,13 @@ app.use((req, res) => {
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(err.status || 500).json({
+  const isUploadError = err.name === 'MulterError' || err.message === 'Please choose a valid EPUB file.';
+  const status = err.status || (isUploadError ? 400 : 500);
+
+  res.status(status).json({
     success: false,
     data: null,
-    error: err.status ? err.message : 'Internal server error',
+    error: status < 500 ? err.message : 'Internal server error',
   });
 });
 

@@ -6,12 +6,13 @@ const navSections = [
     label: 'Library',
     items: [
       { to: '/', icon: 'ti-books', label: 'My Library', badge: 3 },
-      { to: '/add', icon: 'ti-plus', label: 'Add Novel' },
+      { to: '/add', icon: 'ti-plus', label: 'Add Novels' },
     ],
   },
   {
     label: 'Reading',
     items: [
+      { to: '/explore', icon: 'ti-compass', label: 'Explore' },
       { to: '/reader', icon: 'ti-book-open', label: 'Reader' },
       { to: '/log', icon: 'ti-list-check', label: 'Reading Log' },
     ],

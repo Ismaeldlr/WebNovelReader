@@ -1,0 +1,146 @@
+.section {
+  width: min(100%, 1100px);
+  margin: 0 auto;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  padding: 18px;
+}
+
+.header,
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header {
+  margin-bottom: 14px;
+}
+
+.header h2 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.header span {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.controls {
+  margin-bottom: 12px;
+}
+
+.search {
+  min-width: 0;
+  height: 36px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-base);
+}
+
+.search i {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.search input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 13px;
+}
+
+.sortButton,
+.loadMore button {
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 11px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.list {
+  border-top: 0.5px solid var(--border);
+}
+
+.empty,
+.error {
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.empty i {
+  color: var(--text-muted);
+  font-size: 26px;
+}
+
+.error {
+  min-height: 0;
+  display: block;
+  border-radius: var(--radius-sm);
+  background: var(--status-dropped-bg);
+  color: var(--status-dropped);
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.loadMore button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.skeletonRow {
+  height: 44px;
+  border-bottom: 0.5px solid var(--border);
+  background: linear-gradient(90deg, var(--bg-elevated), var(--bg-surface), var(--bg-elevated));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@media (max-width: 620px) {
+  .controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sortButton {
+    width: 100%;
+  }
+}

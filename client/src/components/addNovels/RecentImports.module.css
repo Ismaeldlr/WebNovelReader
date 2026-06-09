@@ -1,0 +1,136 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.header h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  border-top: 0.5px solid var(--border);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(82px, auto);
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  border-bottom: 0.5px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+.titleCell {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.titleCell i {
+  color: var(--text-muted);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.titleCell div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.titleCell a,
+.titleCell span {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.titleCell small {
+  color: var(--text-muted);
+  font-size: 11.5px;
+}
+
+.status {
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.completed {
+  background: var(--status-completed-bg);
+  color: var(--status-completed);
+}
+
+.failed {
+  background: var(--status-dropped-bg);
+  color: var(--status-dropped);
+}
+
+.pending,
+.running {
+  background: var(--status-hold-bg);
+  color: var(--status-hold);
+}
+
+.row time {
+  color: var(--text-muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.empty,
+.error {
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-surface);
+  padding: 13px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.error {
+  color: var(--status-dropped);
+  background: var(--status-dropped-bg);
+}
+
+@media (max-width: 620px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 10px 0;
+  }
+
+  .row time {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+}

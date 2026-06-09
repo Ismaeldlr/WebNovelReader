@@ -1,8 +1,14 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .updateStrip {
   background: var(--accent-light);
-  border: 0.5px solid rgba(194, 65, 12, 0.15);
-  border-radius: var(--radius-md);
-  padding: 11px 14px;
+  border: 0.5px solid rgba(194, 65, 12, 0.18);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -20,73 +26,176 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--accent-text);
   cursor: pointer;
+  white-space: nowrap;
 }
 
-.statsRow {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+.summary {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 2px;
 }
 
-.statCard {
-  background: var(--bg-surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 12px 14px;
-  box-shadow: var(--shadow-card);
-}
-
-.statLabel {
+.eyebrow,
+.sectionTitle {
   font-size: 11px;
+  font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 5px;
+  letter-spacing: 0.7px;
 }
 
-.statValue {
+.summary h1 {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 500;
   color: var(--text-primary);
-  line-height: 1;
-}
-
-.statAccent {
-  color: var(--accent-text);
-}
-
-.statSub {
-  font-size: 11px;
-  color: var(--text-muted);
   margin-top: 3px;
+}
+
+.summary p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+.summaryStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(74px, 1fr));
+  gap: 8px;
+  width: min(100%, 460px);
+}
+
+.summaryStats div {
+  min-width: 0;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  padding: 9px 10px;
+}
+
+.summaryStats span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.summaryStats strong {
+  display: block;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.05;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
-.sectionTitle {
-  font-size: 12px;
-  font-weight: 500;
+.resultCount {
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-}
-
-.seeAll {
   font-size: 12px;
-  color: var(--accent-text);
-  cursor: pointer;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
+}
+
+.loading,
+.empty,
+.error {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.error {
+  color: var(--status-dropped);
+  background: var(--status-dropped-bg);
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 10px;
+}
+
+.loadMore button {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-card);
+  font-size: 13px;
+}
+
+.loadMore button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .summary {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .summaryStats {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .summaryStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .updateStrip {
+    align-items: flex-start;
+  }
+
+  .stripRight {
+    display: none;
+  }
 }
