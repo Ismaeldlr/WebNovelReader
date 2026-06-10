@@ -10,6 +10,8 @@ const novelRoutes = require('./routes/novels');
 const importRoutes = require('./routes/import');
 const readerRoutes = require('./routes/reader');
 const userRoutes = require('./routes/user');
+const searchRoutes = require('./routes/search');
+const historyRoutes = require('./routes/history');
 
 const app = express();
 
@@ -27,12 +29,14 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // Routes
 app.use('/api/health', require('./routes/health'));
 app.use('/api/auth', authRoutes);
+app.use('/api/search', searchRoutes);
 app.use('/api/explore', exploreRoutes);
 app.use('/api/library', libraryRoutes);
 app.use('/api/novels', novelRoutes);
 app.use('/api/import', importRoutes);
 app.use('/api/reader', readerRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/history', historyRoutes);
 
 // 404 handler
 app.use((req, res) => {

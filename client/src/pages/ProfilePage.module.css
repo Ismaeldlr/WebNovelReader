@@ -1,0 +1,397 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  min-height: 190px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 44%),
+    var(--bg-surface);
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--bg-elevated);
+  color: var(--accent-text);
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 500;
+}
+
+.identity {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.identity h1 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.identity p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.headlineStats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.headlineStats div {
+  min-width: 118px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.12);
+  padding: 10px 12px;
+}
+
+.headlineStats strong {
+  display: block;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.headlineStats span {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.streak {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.streakItem {
+  min-height: 104px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.streakItem i {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-light);
+  color: var(--accent-text);
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  font-size: 22px;
+}
+
+.streakItem strong {
+  display: block;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.streakItem span {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.mutedValue {
+  color: var(--text-secondary) !important;
+  font-size: 22px !important;
+}
+
+.sectionTitle {
+  margin: 0 0 12px;
+  border-left: 3px solid var(--accent);
+  padding-left: 9px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.topNovels {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.topNovel {
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 0.5px solid var(--border);
+  transition: background 0.15s;
+}
+
+.topNovel:last-child {
+  border-bottom: 0;
+}
+
+.topNovel:hover {
+  background: var(--bg-elevated);
+}
+
+.topNovelCover {
+  width: 44px;
+  height: 58px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--bg-base);
+  color: var(--text-muted);
+  display: grid;
+  place-items: center;
+}
+
+.topNovelCover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.topNovelCover i {
+  font-size: 18px;
+}
+
+.topNovelBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.topNovelBody strong {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topNovelBody span,
+.topNovelCount {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.topNovelCount {
+  white-space: nowrap;
+}
+
+.empty,
+.state {
+  min-height: 150px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.state i {
+  color: var(--status-dropped);
+  font-size: 18px;
+}
+
+.settings {
+  padding-top: 4px;
+  border-top: 0.5px solid var(--border);
+}
+
+.passwordForm {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.passwordForm label {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.passwordForm label span {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.passwordForm input {
+  width: 100%;
+  height: 38px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  padding: 0 10px;
+  font: inherit;
+  font-size: 13px;
+}
+
+.passwordForm input:focus {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.formFooter {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.formFooter button {
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.formFooter button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.formMessage {
+  min-height: 18px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.success {
+  color: var(--badge-new-text);
+}
+
+.error {
+  color: var(--status-dropped);
+}
+
+@media (max-width: 920px) {
+  .statsGrid,
+  .passwordForm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    gap: 16px;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .avatar {
+    width: 76px;
+    height: 76px;
+    font-size: 34px;
+  }
+
+  .identity h1 {
+    font-size: 30px;
+  }
+
+  .headlineStats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .headlineStats div {
+    min-width: 0;
+  }
+
+  .headlineStats strong {
+    font-size: 20px;
+  }
+
+  .streak,
+  .passwordForm {
+    grid-template-columns: 1fr;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .topNovel {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .topNovelCount {
+    grid-column: 2;
+  }
+}

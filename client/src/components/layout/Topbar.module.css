@@ -20,6 +20,13 @@
   letter-spacing: -0.3px;
 }
 
+.searchSlot {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  justify-content: center;
+}
+
 .menuButton {
   width: 34px;
   height: 34px;
@@ -42,28 +49,9 @@
 }
 
 .right {
-  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.searchBox {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: var(--bg-elevated);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 6px 11px;
-  font-size: 13px;
-  color: var(--text-muted);
-  cursor: text;
-  min-width: 200px;
-}
-
-.searchBox i {
-  font-size: 14px;
 }
 
 .iconBtn {
@@ -102,6 +90,12 @@
   gap: 7px;
   padding: 0 10px;
   font-size: 13px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.account:hover {
+  background: var(--accent-light);
+  color: var(--accent-text);
 }
 
 .account i {
@@ -129,8 +123,11 @@
 
 @media (max-width: 767px) {
   .topbar {
-    padding: 0 14px;
+    height: auto;
+    min-height: var(--topbar-h);
+    padding: 10px 14px;
     gap: 10px;
+    flex-wrap: wrap;
   }
 
   .menuButton {
@@ -138,17 +135,32 @@
   }
 
   .title {
+    flex: 1;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .searchBox {
-    display: none;
+  .searchSlot {
+    order: 3;
+    min-width: 100%;
+    flex-basis: 100%;
   }
 
   .account {
     max-width: 112px;
+  }
+}
+
+@media (max-width: 520px) {
+  .account {
+    width: 32px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .account span {
+    display: none;
   }
 }

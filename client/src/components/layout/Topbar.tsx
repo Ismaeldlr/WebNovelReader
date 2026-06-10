@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+import GlobalSearch from '../GlobalSearch';
 import ThemePicker from '../ThemePicker';
 import type { ThemeId } from '../../hooks/useTheme';
 import styles from './Topbar.module.css';
@@ -34,12 +36,11 @@ export default function Topbar({
       </button>
       <div className={styles.title}>{title}</div>
 
-      <div className={styles.right}>
-        <div className={styles.searchBox}>
-          <i className="ti ti-search" aria-hidden="true" />
-          <span>Search titles, authors...</span>
-        </div>
+      <div className={styles.searchSlot}>
+        <GlobalSearch />
+      </div>
 
+      <div className={styles.right}>
         <button className={styles.iconBtn} aria-label="Notifications">
           <i className="ti ti-bell" aria-hidden="true" />
           <div className={styles.notifDot} />
@@ -47,10 +48,10 @@ export default function Topbar({
 
         <ThemePicker currentTheme={currentTheme} onThemeChange={onThemeChange} />
 
-        <div className={styles.account} title={username}>
+        <Link className={styles.account} to="/profile" title={username} aria-label="View profile">
           <i className="ti ti-user-circle" aria-hidden="true" />
           <span>{username}</span>
-        </div>
+        </Link>
 
         <button
           className={styles.iconBtn}

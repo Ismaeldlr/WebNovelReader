@@ -11,6 +11,8 @@ const pageTitles: Record<string, string> = {
   '/add':     'Add Novels',
   '/explore': 'Explore',
   '/reader':  'Reader',
+  '/history': 'Reading History',
+  '/profile': 'Profile',
   '/log':     'Reading Log',
   '/updates': 'Update Jobs',
   '/offline': 'Offline Cache',

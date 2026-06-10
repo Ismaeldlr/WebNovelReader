@@ -1,0 +1,33 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-family: 'Barlow Condensed', var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.heading::after {
+  content: "";
+  height: 0.5px;
+  flex: 1;
+  background: var(--border);
+}
+
+.entries {
+  display: flex;
+  flex-direction: column;
+}
+
+.entries > :last-child {
+  border-bottom: 0;
+}

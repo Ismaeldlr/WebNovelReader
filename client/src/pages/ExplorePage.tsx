@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { fetchExploreNovels } from '../api/explore';
 import type { ExploreNovel } from '../api/explore';
 import { addNovelToLibrary, deleteNovel } from '../api/library';
@@ -15,13 +15,20 @@ const sourceLabels: Record<string, string> = {
 };
 
 export default function ExplorePage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParam = searchParams.get('search') || '';
   const [novels, setNovels] = useState<ExploreNovel[]>([]);
-  const [search, setSearch] = useState('');
-  const [activeSearch, setActiveSearch] = useState('');
+  const [search, setSearch] = useState(searchParam);
+  const [activeSearch, setActiveSearch] = useState(searchParam);
   const [loading, setLoading] = useState(true);
   const [updatingNovelId, setUpdatingNovelId] = useState<string | null>(null);
   const [removeTarget, setRemoveTarget] = useState<ExploreNovel | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSearch(searchParam);
+    setActiveSearch(searchParam);
+  }, [searchParam]);
 
   useEffect(() => {
     let mounted = true;
@@ -46,7 +53,16 @@ export default function ExplorePage() {
 
   function handleSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setActiveSearch(search);
+    const nextSearch = search.trim();
+    const nextParams = new URLSearchParams(searchParams);
+
+    if (nextSearch) {
+      nextParams.set('search', nextSearch);
+    } else {
+      nextParams.delete('search');
+    }
+
+    setSearchParams(nextParams);
   }
 
   async function addNovel(novel: ExploreNovel) {

@@ -4,10 +4,12 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import AddNovelsPage from './pages/AddNovelsPage';
 import AuthPage from './pages/AuthPage';
 import ExplorePage from './pages/ExplorePage';
+import HistoryPage from './pages/HistoryPage';
 import LibraryPage from './pages/LibraryPage';
 import NovelEditPage from './pages/NovelEditPage';
 import NovelDetailPage from './pages/NovelDetailPage';
 import PlaceholderPage from './pages/PlaceholderPage';
+import ProfilePage from './pages/ProfilePage';
 import ReaderPage from './pages/ReaderPage';
 
 export default function App() {
@@ -45,12 +47,20 @@ function AppRoutes() {
           element={<ExplorePage />}
         />
         <Route
+          path="/history"
+          element={<HistoryPage />}
+        />
+        <Route
           path="/novels/:id"
           element={<NovelDetailPage />}
         />
         <Route
           path="/novels/:id/edit"
           element={<NovelEditPage />}
+        />
+        <Route
+          path="/profile"
+          element={<ProfilePage />}
         />
         <Route
           path="/reader"

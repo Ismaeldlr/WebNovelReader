@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
+router.get('/profile', userController.getProfile);
+router.patch('/password', userController.updatePassword);
 router.patch('/preferences', userController.updateReaderPreferences);
 
 module.exports = router;

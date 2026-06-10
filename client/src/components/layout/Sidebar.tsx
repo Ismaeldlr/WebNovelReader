@@ -15,7 +15,7 @@ const navSections = [
     items: [
       { to: '/explore', icon: 'ti-compass', label: 'Explore' },
       { to: '/reader', icon: 'ti-book-open', label: 'Reader' },
-      { to: '/log', icon: 'ti-list-check', label: 'Reading Log' },
+      { to: '/history', icon: 'ti-history', label: 'Reading Log' },
     ],
   },
   {

@@ -212,5 +212,7 @@ class AuthService {
 
 module.exports = {
   AuthService,
+  hashPassword,
+  verifyPassword,
   TOKEN_TTL_MS,
 };

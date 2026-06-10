@@ -4,7 +4,7 @@ exports.getNovels = async (req, res, next) => {
   try {
     const limit = Math.min(parseInt(req.query.limit || '24', 10), 48);
     const novels = await ExploreService.getNovels(req.user.id, {
-      search: req.query.search || '',
+      search: req.query.search || req.query.q || '',
       limit: Number.isNaN(limit) ? 24 : limit,
     });
 
