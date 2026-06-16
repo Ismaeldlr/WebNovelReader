@@ -55,3 +55,12 @@ exports.updateCover = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteNovel = async (req, res, next) => {
+  try {
+    await NovelService.deleteNovel(req.params.id);
+    res.json({ success: true, data: null, error: null });
+  } catch (err) {
+    next(err);
+  }
+};

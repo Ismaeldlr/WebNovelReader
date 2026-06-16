@@ -49,6 +49,37 @@
   margin-top: 2px;
 }
 
+.dangerSection p {
+  max-width: 620px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.deleteButton {
+  width: fit-content;
+  min-height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--status-dropped);
+  color: #fff;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.deleteButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.error {
+  border-radius: var(--radius-sm);
+  background: var(--status-dropped-bg);
+  color: var(--status-dropped);
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
 .state {
   border-radius: var(--radius-sm);
   border: 0.5px solid var(--border);

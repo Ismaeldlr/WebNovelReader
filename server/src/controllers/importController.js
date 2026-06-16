@@ -1,4 +1,5 @@
 const ImportService = require('../services/importService');
+const JobService = require('../services/jobService');
 
 exports.importEpub = async (req, res, next) => {
   try {
@@ -9,6 +10,15 @@ exports.importEpub = async (req, res, next) => {
 
     const result = await ImportService.importEpub(req.user.id, req.file);
     res.status(201).json({ success: true, data: result, error: null });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.importUrl = async (req, res, next) => {
+  try {
+    const job = await JobService.createUrlImportJob(req.user.id, req.body);
+    res.status(202).json({ success: true, data: job, error: null });
   } catch (err) {
     next(err);
   }

@@ -45,6 +45,7 @@ router.use(authMiddleware);
 
 router.patch('/:id', novelController.updateNovel);
 router.post('/:id/cover', coverUpload.single('cover'), novelController.updateCover);
+router.delete('/:id', novelController.deleteNovel);
 router.get('/:id', novelController.getNovelDetail);
 router.get('/:id/chapters', novelController.getNovelChapters);
 

@@ -17,6 +17,7 @@ import type { LibraryEntry, LibraryStatus } from '../types/novel';
 import styles from './ReaderPage.module.css';
 
 const READER_FONT_KEY = 'reader_font';
+const CHAPTER_FETCH_MESSAGE = 'Chapter content is being fetched. Please try again shortly.';
 
 const DEFAULT_PREFERENCES: ReaderDisplayPreferences = {
   theme: 'dark',
@@ -64,6 +65,7 @@ export default function ReaderPage() {
   const [openPanel, setOpenPanel] = useState<'options' | 'status' | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retrySignal, setRetrySignal] = useState(0);
   const trackedReadsRef = useRef<Set<string>>(new Set());
   const topControlsRef = useRef<HTMLDivElement | null>(null);
   const lastSavedPreferencesRef = useRef(savedPreferenceKey(preferences));
@@ -156,6 +158,11 @@ export default function ReaderPage() {
         if (isMounted) {
           setChapter(null);
           setError(err.message || 'Failed to load chapter.');
+          if (err.message === CHAPTER_FETCH_MESSAGE) {
+            window.setTimeout(() => {
+              if (isMounted) setRetrySignal((value) => value + 1);
+            }, 3500);
+          }
         }
       } finally {
         if (isMounted) {
@@ -169,7 +176,7 @@ export default function ReaderPage() {
     return () => {
       isMounted = false;
     };
-  }, [hasValidParams, novelId, parsedChapterNumber]);
+  }, [hasValidParams, novelId, parsedChapterNumber, retrySignal]);
 
   function handlePreferenceChange(changes: Partial<ReaderDisplayPreferences>) {
     setPreferences((current) => {
@@ -215,16 +222,19 @@ export default function ReaderPage() {
   }
 
   if (!chapter) {
-    const isUnavailable = error === 'Chapter content is not available yet.';
+    const isFetching = error === CHAPTER_FETCH_MESSAGE;
+    const isUnavailable = isFetching || error === 'Chapter content is not available yet.';
 
     return (
       <main className={styles.page}>
         <div className={`${styles.reader} ${styles.medium}`}>
           <div className={styles.centerState}>
-            <i className={isUnavailable ? 'ti ti-cloud-off' : 'ti ti-book-off'} aria-hidden="true" />
-            <h1>{isUnavailable ? 'This chapter is not downloaded yet.' : 'Chapter not found.'}</h1>
+            <i className={isFetching ? 'ti ti-loader-2' : isUnavailable ? 'ti ti-cloud-off' : 'ti ti-book-off'} aria-hidden="true" />
+            <h1>{isFetching ? 'Fetching chapter content...' : isUnavailable ? 'This chapter is not downloaded yet.' : 'Chapter not found.'}</h1>
             <p>
-              {isUnavailable
+              {isFetching
+                ? 'The scraper is downloading this chapter now. This page will refresh automatically.'
+                : isUnavailable
                 ? 'The chapter exists, but its content is not available in your local library.'
                 : 'The chapter may have been removed or the chapter number is invalid.'}
             </p>

@@ -55,3 +55,7 @@ export async function updateNovelCover(id: string, file: File): Promise<string> 
 
   return res.data.cover_url;
 }
+
+export async function deleteNovelRecord(id: string): Promise<void> {
+  await apiClient.delete(`/novels/${id}`);
+}

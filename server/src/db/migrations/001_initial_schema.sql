@@ -15,7 +15,7 @@ CREATE EXTENSION IF NOT EXISTS "citext";     -- case-insensitive text for search
 CREATE TYPE source_site AS ENUM (
   'ranobes',
   'wtr_lab',
-  'royal_road'
+  'royal_road',
   'epub'
 );
 

@@ -33,21 +33,15 @@ function mapNovelDetail(row) {
 }
 
 class NovelService {
-  static async ensureEditableEpub(novelId, client = db) {
+  static async ensureNovelExists(novelId, client = db) {
     const { rows } = await client.query(
-      `SELECT id, source_site FROM novels WHERE id = $1`,
+      `SELECT id, cover_url FROM novels WHERE id = $1`,
       [novelId]
     );
 
     if (!rows[0]) {
       const error = new Error('Novel not found');
       error.status = 404;
-      throw error;
-    }
-
-    if (rows[0].source_site !== 'epub') {
-      const error = new Error('Only EPUB imports can be edited.');
-      error.status = 403;
       throw error;
     }
 
@@ -185,7 +179,7 @@ class NovelService {
     this.validateNovelPatch(changes);
 
     return db.withTransaction(async (client) => {
-      await this.ensureEditableEpub(novelId, client);
+      await this.ensureNovelExists(novelId, client);
 
       const setClauses = [];
       const values = [];
@@ -264,7 +258,7 @@ class NovelService {
   }
 
   static async updateCover(novelId, file) {
-    await this.ensureEditableEpub(novelId);
+    await this.ensureNovelExists(novelId);
 
     const coverUrl = `/covers/${file.filename}`;
     await db.query(
@@ -281,6 +275,27 @@ class NovelService {
     );
 
     return coverUrl;
+  }
+
+  static async deleteNovel(novelId) {
+    const novel = await this.ensureNovelExists(novelId);
+
+    await db.query(
+      `DELETE FROM novels WHERE id = $1`,
+      [novelId]
+    );
+
+    const coversDir = path.join(__dirname, '..', '..', 'public', 'covers');
+    await Promise.all(
+      ['.jpg', '.png', '.webp']
+        .map((extension) => path.join(coversDir, `${novelId}${extension}`))
+        .map((candidate) => fs.rm(candidate, { force: true }).catch(() => undefined))
+    );
+
+    return {
+      id: novelId,
+      cover_url: novel.cover_url,
+    };
   }
 }
 

@@ -1,0 +1,240 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup > span,
+.kicker {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.inputShell {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-base);
+  color: var(--text-muted);
+}
+
+.inputShell:focus-within {
+  border-color: var(--accent);
+}
+
+.inputShell i {
+  flex-shrink: 0;
+  font-size: 17px;
+}
+
+.inputShell input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+}
+
+.inputShell input::placeholder {
+  color: var(--text-muted);
+}
+
+.footerRow,
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sourceBadge {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 0.5px solid var(--border);
+  padding: 0 10px;
+  color: var(--text-muted);
+  background: var(--bg-base);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.detected {
+  border-color: transparent;
+  background: var(--badge-new-bg);
+  color: var(--badge-new-text);
+}
+
+.primaryButton {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.primaryButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.primaryButton i,
+.stateIcon i {
+  font-size: 16px;
+}
+
+.spinning,
+.loadingIcon i {
+  animation: spin 0.9s linear infinite;
+}
+
+.secondaryButton {
+  color: var(--accent-text);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.error {
+  border-radius: var(--radius-sm);
+  background: var(--status-dropped-bg);
+  color: var(--status-dropped);
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.statePanel {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.stateIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--badge-new-bg);
+  color: var(--badge-new-text);
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.failedIcon {
+  background: var(--status-dropped-bg);
+  color: var(--status-dropped);
+}
+
+.failedIcon i {
+  animation: none;
+}
+
+.stateBody {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stateBody h2 {
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 500;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.summary {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.progressTrack {
+  width: min(320px, 100%);
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+}
+
+.progressTrack span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  animation: progress 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes progress {
+  from {
+    transform: translateX(-35%);
+  }
+
+  to {
+    transform: translateX(170%);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 560px) {
+  .form,
+  .statePanel {
+    padding: 16px;
+  }
+
+  .statePanel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .footerRow,
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+}

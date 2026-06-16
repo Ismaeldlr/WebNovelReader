@@ -60,11 +60,9 @@ export default function NovelDetailHero({
           <div>
             <div className={styles.titleRow}>
               <h1>{novel.title}</h1>
-              {novel.source_site === 'epub' && (
-                <Link className={styles.editButton} to={`/novels/${novel.id}/edit`} aria-label="Edit novel">
-                  <i className="ti ti-pencil" aria-hidden="true" />
-                </Link>
-              )}
+              <Link className={styles.editButton} to={`/novels/${novel.id}/edit`} aria-label="Edit novel">
+                <i className="ti ti-pencil" aria-hidden="true" />
+              </Link>
             </div>
             <p className={styles.author}><span>by</span> {novel.author || 'Unknown author'}</p>
           </div>

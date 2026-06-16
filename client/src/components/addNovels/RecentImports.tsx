@@ -9,7 +9,7 @@ interface RecentImportsProps {
 }
 
 function methodLabel(job: RecentImport): string {
-  const source = job.payload?.source || job.sourceSite;
+  const source = job.payload?.source_site || job.payload?.source || job.sourceSite;
   if (source === 'epub') return 'EPUB';
   if (source === 'wtr_lab') return 'WTR Lab';
   if (source === 'royal_road') return 'Royal Road';
@@ -69,7 +69,7 @@ export default function RecentImports({ refreshSignal }: RecentImportsProps) {
                   {job.novelId && job.novelTitle ? (
                     <Link to={`/novels/${job.novelId}`}>{job.novelTitle}</Link>
                   ) : (
-                    <span>{job.payload?.filename || 'Untitled import'}</span>
+                    <span>{job.payload?.filename || job.payload?.url || 'Untitled import'}</span>
                   )}
                   <small>{methodLabel(job)}</small>
                 </div>

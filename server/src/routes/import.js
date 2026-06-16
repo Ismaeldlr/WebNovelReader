@@ -25,6 +25,7 @@ const upload = multer({
 router.use(authMiddleware);
 
 router.post('/epub', upload.single('file'), importController.importEpub);
+router.post('/url', importController.importUrl);
 router.get('/recent', importController.getRecentImports);
 
 module.exports = router;

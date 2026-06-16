@@ -1,5 +1,8 @@
 const db = require('../db/db');
 
+const CHAPTER_FETCH_MESSAGE = 'Chapter content is being fetched. Please try again shortly.';
+const PREFETCH_AHEAD_COUNT = 3;
+
 const DEFAULT_PREFERENCES = {
   theme: 'dark',
   font_size: 18,
@@ -62,6 +65,79 @@ function mapChapter(row) {
   };
 }
 
+async function queueChapterFetch(row, userId) {
+  const maxRetries = Number.parseInt(process.env.MAX_RETRIES || '3', 10);
+
+  await db.withTransaction(async (client) => {
+    const existing = await client.query(
+      `
+        SELECT id
+        FROM scrape_jobs
+        WHERE type = 'chapter_fetch'
+          AND chapter_id = $1
+          AND status IN ('pending', 'running')
+        LIMIT 1
+      `,
+      [row.chapter_id]
+    );
+
+    if (existing.rowCount > 0) return;
+
+    await client.query(
+      `
+        INSERT INTO scrape_jobs (
+          type, status, novel_id, chapter_id, triggered_by, payload, max_retries
+        )
+        VALUES (
+          'chapter_fetch',
+          'pending',
+          $1,
+          $2,
+          $3,
+          $4,
+          $5
+        )
+      `,
+      [
+        row.novel_id,
+        row.chapter_id,
+        userId,
+        JSON.stringify({
+          source_site: row.source_site,
+          url: row.source_url,
+          chapter_id: row.chapter_id,
+        }),
+        Number.isFinite(maxRetries) ? maxRetries : 3,
+      ]
+    );
+  });
+}
+
+async function queueChaptersAhead(row, userId) {
+  const { rows } = await db.query(
+    `
+      SELECT
+        n.id AS novel_id,
+        n.source_site,
+        c.id AS chapter_id,
+        c.source_url
+      FROM chapters c
+      INNER JOIN novels n
+        ON n.id = c.novel_id
+      WHERE c.novel_id = $1
+        AND c.chapter_number > $2
+        AND c.chapter_number <= $3
+        AND c.is_fetched = FALSE
+      ORDER BY c.chapter_number ASC
+    `,
+    [row.novel_id, row.chapter_number, row.chapter_number + PREFETCH_AHEAD_COUNT]
+  );
+
+  for (const chapter of rows) {
+    await queueChapterFetch(chapter, userId);
+  }
+}
+
 class ReaderService {
   static async getChapter(novelId, rawChapterNumber, userId) {
     const chapterNumber = parseChapterNumber(rawChapterNumber);
@@ -71,9 +147,11 @@ class ReaderService {
         SELECT
           n.id AS novel_id,
           n.title AS novel_title,
+          n.source_site,
           c.id AS chapter_id,
           c.chapter_number,
           c.title AS chapter_title,
+          c.source_url,
           c.is_fetched,
           cc.content,
           cc.word_count,
@@ -125,10 +203,13 @@ class ReaderService {
     }
 
     if (!row.is_fetched || !row.content) {
-      const error = new Error('Chapter content is not available yet.');
+      await queueChapterFetch(row, userId);
+      const error = new Error(CHAPTER_FETCH_MESSAGE);
       error.status = 404;
       throw error;
     }
+
+    await queueChaptersAhead(row, userId);
 
     return mapChapter(row);
   }
