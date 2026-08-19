@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getRecentImports, type RecentImport } from '../../api/import';
+import { getJobStatus } from '../../api/jobs';
 import { formatRelativeDate } from '../../utils/date';
 import styles from './RecentImports.module.css';
 
@@ -17,6 +18,17 @@ function methodLabel(job: RecentImport): string {
   return source || 'Import';
 }
 
+function statusLabel(status: RecentImport['status']): string {
+  if (status === 'pending') return 'Waiting in queue';
+  if (status === 'running') return 'Working';
+  if (status === 'completed') return 'Completed';
+  return 'Failed';
+}
+
+function isActive(job: RecentImport): boolean {
+  return job.status === 'pending' || job.status === 'running';
+}
+
 export default function RecentImports({ refreshSignal }: RecentImportsProps) {
   const [imports, setImports] = useState<RecentImport[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,23 +36,59 @@ export default function RecentImports({ refreshSignal }: RecentImportsProps) {
 
   useEffect(() => {
     let cancelled = false;
+    let timer: number | undefined;
+    let firstLoad = true;
 
     async function load() {
-      setLoading(true);
+      if (firstLoad) setLoading(true);
       setError(null);
       try {
         const rows = await getRecentImports();
         if (!cancelled) setImports(rows);
+
+        const activeRows = rows.filter(isActive);
+        if (activeRows.length > 0) {
+          const updates = await Promise.all(
+            activeRows.map(async (row) => {
+              try {
+                const status = await getJobStatus(row.id);
+                return {
+                  ...row,
+                  status: status.status,
+                  completedAt: status.completedAt,
+                  startedAt: status.startedAt,
+                  errorMessage: status.errorMessage,
+                  progress: status.progress,
+                };
+              } catch (err) {
+                return row;
+              }
+            }),
+          );
+
+          if (!cancelled) {
+            const byId = new Map(updates.map((row) => [row.id, row]));
+            setImports((current) => current.map((row) => byId.get(row.id) || row));
+          }
+        }
+
+        if (!cancelled && activeRows.length > 0) {
+          timer = window.setTimeout(() => void load(), 3000);
+        }
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : 'Could not load recent imports.');
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled && firstLoad) {
+          firstLoad = false;
+          setLoading(false);
+        }
       }
     }
 
     load();
     return () => {
       cancelled = true;
+      if (timer !== undefined) window.clearTimeout(timer);
     };
   }, [refreshSignal]);
 
@@ -72,9 +120,17 @@ export default function RecentImports({ refreshSignal }: RecentImportsProps) {
                     <span>{job.payload?.filename || job.payload?.url || 'Untitled import'}</span>
                   )}
                   <small>{methodLabel(job)}</small>
+                  {isActive(job) && job.progress.message && <small>{job.progress.message}</small>}
                 </div>
               </div>
-              <span className={`${styles.status} ${styles[job.status]}`}>{job.status}</span>
+              <div className={styles.statusCell}>
+                <span className={`${styles.status} ${styles[job.status]}`}>{statusLabel(job.status)}</span>
+                {isActive(job) && (
+                  <div className={styles.progressTrack} aria-label={`${job.progress.percent}% complete`}>
+                    <span style={{ width: `${Math.max(4, job.progress.percent)}%` }} />
+                  </div>
+                )}
+              </div>
               <time>{formatRelativeDate(job.createdAt)}</time>
             </div>
           ))}

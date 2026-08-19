@@ -19,6 +19,12 @@ const navSections = [
     ],
   },
   {
+    label: 'Write',
+    items: [
+      { to: '/write', icon: 'ti-notebook', label: 'Projects' },
+    ],
+  },
+  {
     label: 'System',
     items: [
       { to: '/updates', icon: 'ti-refresh', label: 'Update Jobs' },

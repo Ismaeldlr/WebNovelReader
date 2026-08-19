@@ -23,7 +23,9 @@ def claim_next_job() -> dict[str, Any] | None:
         SET status = 'running',
             started_at = NOW(),
             error_type = NULL,
-            error_message = NULL
+            error_message = NULL,
+            progress_percent = GREATEST(progress_percent, 5),
+            progress_message = 'Starting import'
         FROM next_job
         WHERE sj.id = next_job.id
         RETURNING sj.*
@@ -36,6 +38,27 @@ def claim_next_job() -> dict[str, Any] | None:
             return dict(row) if row else None
 
 
+def update_progress(
+    job_id: str,
+    percent: int,
+    message: str,
+    current: int | None = None,
+    total: int | None = None,
+) -> None:
+    db.execute(
+        """
+        UPDATE scrape_jobs
+        SET progress_percent = %s,
+            progress_message = %s,
+            progress_current = %s,
+            progress_total = %s
+        WHERE id = %s
+          AND status = 'running'
+        """,
+        (max(0, min(100, int(percent))), message[:255], current, total, job_id),
+    )
+
+
 def mark_complete(job_id: str, novel_id: str, chapter_count: int) -> None:
     db.execute(
         """
@@ -45,10 +68,20 @@ def mark_complete(job_id: str, novel_id: str, chapter_count: int) -> None:
             completed_at = NOW(),
             result = %s,
             error_type = NULL,
-            error_message = NULL
+            error_message = NULL,
+            progress_percent = 100,
+            progress_message = 'Import complete',
+            progress_current = %s,
+            progress_total = %s
         WHERE id = %s
         """,
-        (novel_id, Json({"novel_id": novel_id, "chapter_count": chapter_count}), job_id),
+        (
+            novel_id,
+            Json({"novel_id": novel_id, "chapter_count": chapter_count}),
+            chapter_count,
+            chapter_count,
+            job_id,
+        ),
     )
 
 
@@ -61,7 +94,9 @@ def mark_chapter_complete(job_id: str, chapter_id: str, word_count: int) -> None
             completed_at = NOW(),
             result = %s,
             error_type = NULL,
-            error_message = NULL
+            error_message = NULL,
+            progress_percent = 100,
+            progress_message = 'Chapter complete'
         WHERE id = %s
         """,
         (chapter_id, Json({"chapter_id": chapter_id, "word_count": word_count}), job_id),
@@ -87,7 +122,11 @@ def mark_failed(job_id: str, error_type: str, error_message: str, retry: bool) -
             SET status = 'pending',
                 retry_count = retry_count + 1,
                 error_type = %s,
-                error_message = %s
+                error_message = %s,
+                progress_percent = 0,
+                progress_message = 'Retrying import',
+                progress_current = NULL,
+                progress_total = NULL
             WHERE id = %s
             """,
             (error_type, error_message[:1000], job_id),
@@ -101,7 +140,9 @@ def mark_failed(job_id: str, error_type: str, error_message: str, retry: bool) -
             completed_at = NOW(),
             error_type = %s,
             error_message = %s,
-            result = %s
+            result = %s,
+            progress_percent = 100,
+            progress_message = 'Import failed'
         WHERE id = %s
         """,
         (error_type, error_message[:1000], Json({"error": error_message[:1000]}), job_id),

@@ -1,6 +1,12 @@
+import { lazy, Suspense, useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import CommandPalette from './components/CommandPalette';
+import type { CommandPaletteHandle } from './components/CommandPalette';
 import AppLayout from './components/layout/AppLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { findKeybinding } from './lib/keybindings';
+import { runEditorShortcut } from './lib/editorShortcuts';
 import AddNovelsPage from './pages/AddNovelsPage';
 import AuthPage from './pages/AuthPage';
 import ExplorePage from './pages/ExplorePage';
@@ -11,6 +17,10 @@ import NovelDetailPage from './pages/NovelDetailPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 import ProfilePage from './pages/ProfilePage';
 import ReaderPage from './pages/ReaderPage';
+
+const DocumentEditorPage = lazy(() => import('./pages/write/DocumentEditorPage'));
+const ProjectPage = lazy(() => import('./pages/write/ProjectPage'));
+const WriteHomePage = lazy(() => import('./pages/write/WriteHomePage'));
 
 export default function App() {
   return (
@@ -24,6 +34,74 @@ export default function App() {
 
 function AppRoutes() {
   const { user, loading } = useAuth();
+  const commandPaletteRef = useRef<CommandPaletteHandle | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const isTyping = target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
+        target?.isContentEditable;
+      const binding = findKeybinding(event);
+
+      if (!binding) return;
+      if (isTyping && binding.action !== 'openCommandPalette') return;
+
+      if (binding.action === 'openCommandPalette') {
+        event.preventDefault();
+        commandPaletteRef.current?.openPalette();
+        return;
+      }
+
+      if (binding.action === 'forceSave') {
+        event.preventDefault();
+        runEditorShortcut('forceSave');
+        return;
+      }
+
+      if (binding.action === 'toggleDistractionFree') {
+        if (runEditorShortcut('toggleDistractionFree')) {
+          event.preventDefault();
+        }
+        return;
+      }
+
+      if (binding.action === 'openVersionHistory') {
+        if (runEditorShortcut('openVersionHistory')) {
+          event.preventDefault();
+        }
+        return;
+      }
+
+      if (binding.action === 'openPendingItems') {
+        if (runEditorShortcut('openPendingItems')) {
+          event.preventDefault();
+        }
+        return;
+      }
+
+      if (binding.action === 'toggleTypewriterSounds') {
+        if (runEditorShortcut('toggleTypewriterSounds')) {
+          event.preventDefault();
+        }
+        return;
+      }
+
+      if (binding.action === 'previousDocument') {
+        if (runEditorShortcut('previousDocument')) {
+          event.preventDefault();
+        }
+        return;
+      }
+
+      if (binding.action === 'nextDocument' && runEditorShortcut('nextDocument')) {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   if (loading) {
     return <div className="app-loading">Loading...</div>;
@@ -34,14 +112,28 @@ function AppRoutes() {
   }
 
   return (
-    <Routes>
-      <Route
-        path="/reader/:novelId/:chapterNumber"
-        element={<ReaderPage />}
-      />
-      <Route element={<AppLayout />}>
-        <Route index element={<LibraryPage />} />
-        <Route path="/add" element={<AddNovelsPage />} />
+    <>
+      <CommandPalette ref={commandPaletteRef} />
+      <Routes>
+        <Route
+          path="/reader/:novelId/:chapterNumber"
+          element={<ReaderPage />}
+        />
+        <Route
+          path="/write/:projectId/documents/:documentId"
+          element={<LazyPage><DocumentEditorPage /></LazyPage>}
+        />
+        <Route
+          path="/write/:projectId"
+          element={<LazyPage><ProjectPage /></LazyPage>}
+        />
+        <Route element={<AppLayout />}>
+          <Route index element={<LibraryPage />} />
+          <Route path="/add" element={<AddNovelsPage />} />
+          <Route
+            path="/write"
+            element={<LazyPage><WriteHomePage /></LazyPage>}
+          />
         <Route
           path="/explore"
           element={<ExplorePage />}
@@ -113,6 +205,15 @@ function AppRoutes() {
           }
         />
       </Route>
-    </Routes>
+      </Routes>
+    </>
+  );
+}
+
+function LazyPage({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={<div className="app-loading">Loading...</div>}>
+      {children}
+    </Suspense>
   );
 }

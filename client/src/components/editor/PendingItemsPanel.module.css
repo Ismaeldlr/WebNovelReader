@@ -1,0 +1,243 @@
+.panel {
+  position: fixed;
+  z-index: 620;
+  width: min(360px, calc(100vw - 24px));
+  max-height: min(480px, calc(100vh - 24px));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
+}
+
+.titleBar {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 0.5px solid var(--border);
+  cursor: move;
+  padding: 0 10px 0 12px;
+}
+
+.titleBar strong {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.titleBar button,
+.resolveButton,
+.dragHandle {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+}
+
+.titleBar button:hover,
+.resolveButton:hover,
+.dragHandle:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.addForm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  border-bottom: 0.5px solid var(--border);
+  padding: 10px;
+}
+
+.addForm input {
+  min-width: 0;
+  height: 34px;
+  grid-column: 1 / -1;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  padding: 0 9px;
+}
+
+.tagPicker {
+  display: flex;
+  gap: 5px;
+}
+
+.tagPicker button,
+.addButton {
+  height: 30px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  padding: 0 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.tagPicker button:hover,
+.tagPicker button.tag-urgent,
+.tagPicker button.tag-idea,
+.tagPicker button.tag-scene {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.addButton {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+.list {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.itemRow {
+  display: grid;
+  grid-template-columns: 24px auto minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 6px;
+  border: 0.5px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 5px;
+}
+
+.itemRow:hover {
+  border-color: var(--border);
+  background: var(--bg-elevated);
+}
+
+.dragHandle {
+  cursor: grab;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.tagBadge {
+  border-radius: 999px;
+  padding: 3px 7px;
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.tag-urgent {
+  background: #b91c1c;
+}
+
+.tag-idea {
+  background: var(--accent);
+}
+
+.tag-scene {
+  background: #2563eb;
+}
+
+.itemText {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expandedEditor {
+  grid-column: 2 / -1;
+  display: grid;
+  gap: 6px;
+  padding: 4px 0 2px;
+}
+
+.expandedEditor textarea {
+  width: 100%;
+  resize: vertical;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  padding: 8px;
+}
+
+.expandedEditor button {
+  justify-self: start;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  color: #fca5a5;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.showResolved {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-top: 0.5px solid var(--border);
+  color: var(--text-muted);
+  margin-top: 8px;
+  padding: 9px 4px 2px;
+  font-size: 12px;
+}
+
+.showResolved input {
+  accent-color: var(--accent);
+}
+
+.resolvedList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.resolvedRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 5px;
+}
+
+.resolvedRow span {
+  overflow: hidden;
+  text-decoration: line-through;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resolvedRow button {
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+
+.empty {
+  color: var(--text-muted);
+  padding: 12px 6px;
+  font-size: 12.5px;
+}
+
+.dragging {
+  opacity: 0.55;
+}

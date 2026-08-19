@@ -1,0 +1,203 @@
+.editorShell {
+  width: min(100%, 720px);
+  margin: 0 auto;
+  position: relative;
+}
+
+.storyEditor {
+  width: min(100%, 760px);
+}
+
+.noteEditor {
+  width: min(100%, 640px);
+}
+
+.formatBar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 0.5px solid var(--border);
+  background: color-mix(in srgb, var(--bg-base) 94%, #000);
+}
+
+.formatBar button,
+.bubbleMenu button {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formatBar button:hover,
+.bubbleMenu button:hover,
+.active {
+  background: var(--accent-light);
+  color: var(--accent-text);
+}
+
+.bubbleMenu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
+  padding: 4px;
+}
+
+.bubbleMenu select {
+  height: 30px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  padding: 0 6px;
+}
+
+.slashMenu {
+  position: absolute;
+  left: 0;
+  top: 48px;
+  z-index: 30;
+}
+
+.editorContent {
+  padding: 32px 0 90px;
+}
+
+.prose {
+  min-height: 58vh;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.85;
+}
+
+.editorContent :global(.ProseMirror p) {
+  margin: 0 0 1.1em;
+}
+
+.editorContent :global(.ProseMirror h1),
+.editorContent :global(.ProseMirror h2),
+.editorContent :global(.ProseMirror h3) {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 1.6em 0 0.7em;
+}
+
+.editorContent :global(.ProseMirror h1) {
+  font-size: 34px;
+}
+
+.editorContent :global(.ProseMirror h2) {
+  font-size: 28px;
+}
+
+.editorContent :global(.ProseMirror h3) {
+  font-size: 23px;
+}
+
+.editorContent :global(.ProseMirror ul),
+.editorContent :global(.ProseMirror ol) {
+  padding-left: 1.4em;
+  margin: 0 0 1.1em;
+}
+
+.editorContent :global(.ProseMirror ul[data-type='taskList']) {
+  list-style: none;
+  padding-left: 0;
+}
+
+.editorContent :global(.ProseMirror li[data-type='taskItem']) {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.editorContent :global(.ProseMirror li[data-type='taskItem'] > label) {
+  flex: 0 0 auto;
+  margin-top: 0.45em;
+}
+
+.editorContent :global(.ProseMirror li[data-type='taskItem'] > div) {
+  flex: 1;
+}
+
+.editorContent :global(.ProseMirror blockquote) {
+  border-left: 3px solid var(--accent);
+  color: var(--text-secondary);
+  margin: 1.2em 0;
+  padding-left: 1em;
+}
+
+.editorContent :global(.ProseMirror code) {
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-surface);
+  padding: 0.08em 0.3em;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.86em;
+}
+
+.editorContent :global(.ProseMirror pre) {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  margin: 1.2em 0;
+  overflow-x: auto;
+  padding: 12px;
+}
+
+.editorContent :global(.ProseMirror pre code) {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.editorContent :global(.ProseMirror hr) {
+  border: none;
+  border-top: 0.5px solid var(--border-strong);
+  margin: 2.2em 0;
+}
+
+.editorContent :global(.ProseMirror hr[data-chapter-break]) {
+  width: 46%;
+  border-top: 2px solid var(--accent);
+  margin: 3em auto;
+  opacity: 0.85;
+}
+
+.editorContent :global(.ProseMirror-focused) {
+  outline: none;
+}
+
+.loading {
+  width: min(100%, 720px);
+  margin: 0 auto;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .prose {
+    font-size: 18px;
+    line-height: 1.75;
+  }
+
+  .editorContent {
+    padding-top: 22px;
+  }
+}

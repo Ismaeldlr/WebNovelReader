@@ -18,6 +18,7 @@ exports.importEpub = async (req, res, next) => {
 exports.importUrl = async (req, res, next) => {
   try {
     const job = await JobService.createUrlImportJob(req.user.id, req.body);
+    res.location(`/api/jobs/${job.id}`);
     res.status(202).json({ success: true, data: job, error: null });
   } catch (err) {
     next(err);

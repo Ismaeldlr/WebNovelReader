@@ -1,0 +1,135 @@
+.wrapper {
+  border-top: 0.5px solid var(--border);
+  background: color-mix(in srgb, var(--bg-base) 90%, #000);
+}
+
+.progressTrack {
+  height: 3px;
+  background: var(--bg-elevated);
+}
+
+.progressFill,
+.progressDone {
+  height: 100%;
+  transition: width 0.2s ease;
+}
+
+.progressFill {
+  background: var(--accent);
+}
+
+.progressDone {
+  background: #6aa77b;
+}
+
+.statusbar {
+  min-height: 40px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.leftStatus,
+.goalStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.saveStatus {
+  color: var(--text-secondary);
+}
+
+.wordButton,
+.goalLink,
+.iconButton {
+  color: var(--text-secondary);
+}
+
+.wordButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wordButton:disabled {
+  cursor: default;
+}
+
+.wordButton:not(:disabled):hover,
+.goalLink:hover,
+.iconButton:hover {
+  color: var(--accent-text);
+}
+
+.iconButton {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+}
+
+.goalStatus i {
+  color: #6aa77b;
+}
+
+.popoverAnchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.popover {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  z-index: 60;
+  width: 190px;
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
+  padding: 8px;
+}
+
+.popover input {
+  width: 100%;
+  height: 32px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  padding: 0 8px;
+}
+
+.popoverActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.popoverActions button {
+  height: 28px;
+  border-radius: var(--radius-sm);
+  padding: 0 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.popoverActions button:last-child {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .statusbar {
+    flex-wrap: wrap;
+    gap: 8px 14px;
+  }
+}

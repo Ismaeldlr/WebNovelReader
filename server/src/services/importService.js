@@ -320,7 +320,8 @@ class ImportService {
 
       await client.query(
         `INSERT INTO scrape_jobs (
-          type, status, triggered_by, novel_id, payload, result, started_at, completed_at
+          type, status, triggered_by, novel_id, payload, result,
+          progress_percent, progress_message, started_at, completed_at
         )
         VALUES (
           'novel_ingestion',
@@ -329,6 +330,8 @@ class ImportService {
           $2,
           $3,
           $4,
+          100,
+          'Import complete',
           NOW(),
           NOW()
         )`,
@@ -358,6 +361,11 @@ class ImportService {
           sj.completed_at,
           sj.payload,
           sj.error_message,
+          sj.progress_percent,
+          sj.progress_message,
+          sj.progress_current,
+          sj.progress_total,
+          sj.started_at,
           n.id AS novel_id,
           n.title AS novel_title,
           n.source_site
@@ -375,8 +383,15 @@ class ImportService {
       status: row.status,
       createdAt: row.created_at,
       completedAt: row.completed_at,
+      startedAt: row.started_at,
       payload: row.payload,
       errorMessage: row.error_message,
+      progress: {
+        percent: Number(row.progress_percent || 0),
+        message: row.progress_message || null,
+        current: row.progress_current == null ? null : Number(row.progress_current),
+        total: row.progress_total == null ? null : Number(row.progress_total),
+      },
       novelId: row.novel_id,
       novelTitle: row.novel_title,
       sourceSite: row.source_site || row.payload?.source || 'epub',

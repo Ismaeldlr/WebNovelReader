@@ -65,6 +65,12 @@ function mapJob(row) {
     errorType: row.error_type,
     errorMessage: row.error_message,
     retryCount: row.retry_count,
+    progress: {
+      percent: Number(row.progress_percent || 0),
+      message: row.progress_message || null,
+      current: row.progress_current == null ? null : Number(row.progress_current),
+      total: row.progress_total == null ? null : Number(row.progress_total),
+    },
     createdAt: row.created_at,
     startedAt: row.started_at,
     completedAt: row.completed_at,
@@ -100,16 +106,19 @@ class JobService {
     const maxRetries = Number.parseInt(process.env.MAX_RETRIES || '3', 10);
     const { rows } = await db.query(
       `INSERT INTO scrape_jobs (
-          type, status, triggered_by, payload, max_retries
+          type, status, triggered_by, payload, max_retries,
+          progress_message
         )
         VALUES (
           'novel_ingestion',
           'pending',
           $1,
           $2,
-          $3
+          $3,
+          'Waiting for scraper worker'
         )
-        RETURNING id, type, status, payload, created_at`,
+        RETURNING id, type, status, payload, created_at,
+                  progress_percent, progress_message, progress_current, progress_total`,
       [
         userId,
         JSON.stringify({ url, source_site: sourceSite }),
@@ -118,6 +127,13 @@ class JobService {
     );
 
     const job = rows[0];
+
+    // The worker is durable and independent from the browser page. Start it
+    // lazily so an API call actually begins processing in local deployments.
+    // Deployments with a separately managed worker can set SCRAPER_AUTOSTART=false.
+    const scraperWorker = require('./scraperWorkerService');
+    scraperWorker.ensureStarted();
+
     return {
       id: job.id,
       type: job.type,
@@ -125,6 +141,12 @@ class JobService {
       sourceSite,
       sourceLabel: SOURCE_SITE_LABELS[sourceSite],
       url: job.payload?.url || url,
+      progress: {
+        percent: Number(job.progress_percent || 0),
+        message: job.progress_message,
+        current: job.progress_current == null ? null : Number(job.progress_current),
+        total: job.progress_total == null ? null : Number(job.progress_total),
+      },
       createdAt: job.created_at,
     };
   }
@@ -138,6 +160,10 @@ class JobService {
           sj.error_type,
           sj.error_message,
           sj.retry_count,
+          sj.progress_percent,
+          sj.progress_message,
+          sj.progress_current,
+          sj.progress_total,
           sj.created_at,
           sj.started_at,
           sj.completed_at,

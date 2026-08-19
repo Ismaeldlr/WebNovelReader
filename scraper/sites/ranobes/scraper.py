@@ -100,6 +100,27 @@ class RanobesScraper(BaseScraper):
                 continue
         return None
 
+    def _extract_novel_title(self) -> str:
+        locator = self._first_locator(selectors.NOVEL_TITLE)
+        if locator is None:
+            raise StructureChangedError(f"Could not find novel title on {self.page.url}")
+
+        try:
+            title = locator.evaluate(
+                """element => {
+                    const clone = element.cloneNode(true);
+                    clone.querySelectorAll('.subtitle, [hidden]').forEach(node => node.remove());
+                    return clone.textContent || '';
+                }"""
+            )
+        except PlaywrightError:
+            title = locator.inner_text(timeout=3000)
+
+        clean = strip_html(title)
+        if not clean:
+            raise StructureChangedError(f"novel title was empty on {self.page.url}")
+        return clean
+
     def _extract_chapters_from_data(self, data: dict) -> list[dict]:
         chapters = data.get("chapters")
         if not isinstance(chapters, list):
@@ -110,7 +131,7 @@ class RanobesScraper(BaseScraper):
         self._goto(url)
         self._wait_for_ranobes(selectors.NOVEL_TITLE, "novel title")
 
-        title = self._first_text(selectors.NOVEL_TITLE, "novel title") or "Untitled"
+        title = self._extract_novel_title()
         author = self._first_text(selectors.NOVEL_AUTHOR, "novel author", required=False)
         description = self._first_text(selectors.NOVEL_DESCRIPTION, "novel description", required=False)
         cover_url = self._first_attr(selectors.NOVEL_COVER, "src", "cover image", required=False)

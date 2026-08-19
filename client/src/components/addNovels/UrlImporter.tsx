@@ -16,7 +16,8 @@ const sourceLabels: Record<UrlSourceSite, string> = {
 };
 
 function statusMessage(job: ScrapeJobStatus, elapsedSeconds: number): string {
-  if (job.status === 'pending') return 'Waiting in queue...';
+  if (job.progress.message) return job.progress.message;
+  if (job.status === 'pending') return 'Waiting for scraper worker...';
   if (job.status === 'completed') return 'Import complete';
   if (job.status === 'failed') return 'Import failed';
   if (elapsedSeconds < 10) return 'Fetching novel details...';
@@ -62,18 +63,29 @@ export default function UrlImporter({ onImported }: UrlImporterProps) {
     async function poll() {
       try {
         const nextJob = await getJobStatus(currentJobId);
-        if (!cancelled) setJob(nextJob);
+        if (!cancelled) {
+          setError(null);
+          setJob(nextJob);
+        }
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : 'Could not load job status.');
       }
     }
 
-    const timer = window.setInterval(poll, 3000);
-    poll();
+    let timer: number | undefined;
+    const schedulePoll = () => {
+      if (!cancelled) timer = window.setTimeout(pollAndSchedule, 3000);
+    };
+    async function pollAndSchedule() {
+      await poll();
+      schedulePoll();
+    }
+
+    void pollAndSchedule();
 
     return () => {
       cancelled = true;
-      window.clearInterval(timer);
+      if (timer !== undefined) window.clearTimeout(timer);
     };
   }, [job?.id, isTerminal]);
 
@@ -107,6 +119,7 @@ export default function UrlImporter({ onImported }: UrlImporterProps) {
         errorType: null,
         errorMessage: null,
         retryCount: 0,
+        progress: queued.progress,
         createdAt: queued.createdAt,
         startedAt: null,
         completedAt: null,
@@ -179,8 +192,13 @@ export default function UrlImporter({ onImported }: UrlImporterProps) {
           <span className={styles.kicker}>{job.status}</span>
           <h2>{statusMessage(job, elapsedSeconds)}</h2>
           <div className={styles.progressTrack}>
-            <span />
+            <span style={{ width: `${Math.max(4, job.progress.percent)}%` }} />
           </div>
+          {job.progress.current != null && job.progress.total != null && (
+            <div className={styles.summary}>
+              {job.progress.current} of {job.progress.total} chapters
+            </div>
+          )}
           {error && <div className={styles.error}>{error}</div>}
         </div>
       </div>

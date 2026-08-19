@@ -13,8 +13,13 @@ const readerRoutes = require('./routes/reader');
 const userRoutes = require('./routes/user');
 const searchRoutes = require('./routes/search');
 const historyRoutes = require('./routes/history');
+const writeRoutes = require('./routes/write');
 
 const app = express();
+
+// Job status changes frequently. Do not let Express/browser freshness checks
+// turn polling into an endless stream of 304 responses.
+app.disable('etag');
 
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
@@ -26,6 +31,12 @@ app.use(cors({
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/api', (req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  next();
+});
 
 // Routes
 app.use('/api/health', require('./routes/health'));
@@ -39,6 +50,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/reader', readerRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/history', historyRoutes);
+app.use('/api/write', writeRoutes);
 
 // 404 handler
 app.use((req, res) => {

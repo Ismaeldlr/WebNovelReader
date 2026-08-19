@@ -33,6 +33,11 @@ On Windows, you can also run the helper from the project root:
 
 The worker claims pending `novel_ingestion` jobs, scrapes metadata and chapter lists, inserts the novel and chapter metadata, and marks the job completed or failed.
 
+The Node API starts this worker automatically when the server starts or when the
+first URL import is submitted. Set `SCRAPER_AUTOSTART=false` when the worker is
+managed separately by a service supervisor. `SCRAPER_PYTHON` can be set to an
+explicit Python executable when the virtualenv is not at `scraper/.venv`.
+
 ## Notes
 
 - The Node server never calls this worker. URL imports are queued in `scrape_jobs`.

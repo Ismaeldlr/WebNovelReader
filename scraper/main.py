@@ -49,9 +49,10 @@ def _categorize_error(exc: Exception) -> tuple[str, bool]:
     return "unknown", True
 
 
-def prefetch_initial_chapters(scraper, chapters):
+def prefetch_initial_chapters(scraper, chapters, job_id: str | None = None):
     enriched = list(chapters)
     last_started_at: float | None = None
+    total = min(len(enriched), INITIAL_CHAPTER_PREFETCH_COUNT)
 
     for index, chapter in enumerate(enriched[:INITIAL_CHAPTER_PREFETCH_COUNT]):
         if last_started_at is not None:
@@ -63,6 +64,15 @@ def prefetch_initial_chapters(scraper, chapters):
         last_started_at = time.monotonic()
         content = scraper.scrape_chapter_content(chapter.source_url)
         enriched[index] = replace(chapter, content=content)
+        if job_id:
+            percent = 45 + round(((index + 1) / max(total, 1)) * 30)
+            job_queue.update_progress(
+                job_id,
+                percent,
+                f'Fetching chapter {index + 1} of {total}',
+                index + 1,
+                total,
+            )
 
     return enriched
 
@@ -86,13 +96,18 @@ def process_job(browser: BrowserManager, job: dict[str, Any]) -> None:
         raise UnknownSourceError("Job is missing the user who triggered it.")
 
     logger.info("Scraping %s job %s: %s", source_site, job["id"], url)
+    job_id = str(job["id"])
+    job_queue.update_progress(job_id, 10, 'Fetching novel details')
     with browser.new_page() as page:
         scraper = get_scraper(source_site, page, settings)
         novel = scraper.scrape_novel(url)
+        job_queue.update_progress(job_id, 30, 'Loading chapter list')
         chapters = scraper.scrape_chapter_list(url)
-        chapters = prefetch_initial_chapters(scraper, chapters)
-        novel_id = job_queue.ingest_novel(novel, chapters, str(job["id"]), str(user_id))
-        job_queue.mark_complete(str(job["id"]), novel_id, len(chapters))
+        job_queue.update_progress(job_id, 42, f'Found {len(chapters)} chapters', 0, len(chapters))
+        chapters = prefetch_initial_chapters(scraper, chapters, job_id)
+        job_queue.update_progress(job_id, 80, 'Saving novel and chapters', len(chapters), len(chapters))
+        novel_id = job_queue.ingest_novel(novel, chapters, job_id, str(user_id))
+        job_queue.mark_complete(job_id, novel_id, len(chapters))
         logger.info("Completed job %s: novel=%s chapters=%s", job["id"], novel_id, len(chapters))
 
 
@@ -109,11 +124,14 @@ def process_chapter_fetch(browser: BrowserManager, job: dict[str, Any]) -> None:
     source_site = str(payload.get("source_site") or "").strip() or detect_source_site(url)
 
     logger.info("Fetching %s chapter job %s: %s", source_site, job["id"], url)
+    job_id = str(job["id"])
+    job_queue.update_progress(job_id, 25, 'Fetching chapter content')
     with browser.new_page() as page:
         scraper = get_scraper(source_site, page, settings)
         content = scraper.scrape_chapter_content(url)
+        job_queue.update_progress(job_id, 80, 'Saving chapter content')
         word_count = job_queue.store_chapter_content(str(chapter_id), content)
-        job_queue.mark_chapter_complete(str(job["id"]), str(chapter_id), word_count)
+        job_queue.mark_chapter_complete(job_id, str(chapter_id), word_count)
         logger.info("Completed chapter job %s: chapter=%s words=%s", job["id"], chapter_id, word_count)
 
 

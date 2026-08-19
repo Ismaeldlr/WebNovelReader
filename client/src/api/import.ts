@@ -22,6 +22,12 @@ export interface UrlImportJob {
   sourceSite: UrlSourceSite;
   sourceLabel: string;
   url: string;
+  progress: {
+    percent: number;
+    message: string | null;
+    current: number | null;
+    total: number | null;
+  };
   createdAt: string;
 }
 
@@ -31,6 +37,13 @@ export interface RecentImport {
   createdAt: string;
   completedAt: string | null;
   errorMessage: string | null;
+  startedAt: string | null;
+  progress: {
+    percent: number;
+    message: string | null;
+    current: number | null;
+    total: number | null;
+  };
   novelId: string | null;
   novelTitle: string | null;
   sourceSite: string;
@@ -75,6 +88,9 @@ export async function importByUrl(url: string, sourceSite?: UrlSourceSite): Prom
 }
 
 export async function getRecentImports(): Promise<RecentImport[]> {
-  const res = await apiClient.get<unknown, ApiEnvelope<RecentImport[]>>('/import/recent');
+  const res = await apiClient.get<unknown, ApiEnvelope<RecentImport[]>>('/import/recent', {
+    params: { poll: Date.now() },
+    headers: { 'Cache-Control': 'no-cache' },
+  });
   return res.data;
 }
